@@ -1,5 +1,3 @@
-ENTRY(_start)
-
 SECTIONS
 {
     . = 0x01000000;     /* Kernel load address for AArch64 + U-boot */

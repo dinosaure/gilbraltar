@@ -13,7 +13,7 @@ _start:
 2:  // We're on the main core!
 
     // Set stack to start below our code
-    ldr     x1, =main
+    ldr     x1, =_start
     mov     sp, x1
 
     // Clean the BSS section
@@ -25,6 +25,6 @@ _start:
     cbnz    w2, 3b               // Loop if non-zero
 
     // Jump to our main() routine in C (make sure it doesn't return)
-4:  bl      _start
+4:  bl      main
     // In case it does return, halt the master core too
     b       1b

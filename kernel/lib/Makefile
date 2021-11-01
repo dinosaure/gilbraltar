@@ -12,7 +12,7 @@ CFLAGS= -I../include/ \
 	-DPRINTF_INCLUDE_CONFIG_H \
 	-DSSP_GUARD_SYMBOL=__stack_chk_guard \
 	-DSSP_FAIL_SYMBOL=__stack_chk_fail \
-	-ffreestanding -nostdinc -nostdlib
+	-ffreestanding -fstack-protector-strong -nostdinc -nostdlib
 LDFLAGS= -L. -nostdlib
 
 boot.o: boot.S
@@ -25,6 +25,15 @@ gilbraltar_rpi4.o: boot.o $(filter-out stub.o,$(OBJ))
 #	$(OBJCOPY) -w -G uart_\* -G rpi4_startup -G _start\* \
 #		-G __stack_chk_guard -G __stack_chk_fail \
 #		$@ $@
+
+kernel8.elf: $(filter-out stub.o,$(OBJ))
+	echo "void caml_startup(char **argv) { }" > caml.c
+	$(CC) $(CFLAGS) -c caml.c -o caml.o
+	$(CC) $(CFLAGS) -c boot.S -o boot.o
+	$(LD) $(LDFLAGS) boot.o caml.o $^ -L../../nolibc/ -lnolibc -T rpi4_link.lds -o kernel8.elf
+	$(RM) caml.c
+	$(RM) caml.o
+	$(RM) boot.o
 
 gilbraltar_stub.o: $(filter-out kernel.o,$(OBJ))
 	@echo "LD $@"
