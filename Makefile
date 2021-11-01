@@ -4,13 +4,13 @@ include Makeconf
 
 all:	kernel openlibm/libopenlibm.a nolibc/libnolibc.a ocaml rpi4.conf
 
-kernel/include:
+kernel/include/rpi4.h:
 	$(MAKE) -C kernel include
 
-kernel/lib/gilbraltar_rpi4.o: kernel/include
+kernel/lib/gilbraltar_rpi4.o: kernel/include/rpi4.h
 	$(MAKE) -C kernel $(@:kernel/%=%)
 
-kernel/lib/gilbraltar_stub.o: kernel/include
+kernel/lib/gilbraltar_stub.o: kernel/include/rpi4.h
 	$(MAKE) -C kernel $(@:kernel/%=%)
 
 KERNEL= kernel/include kernel/lib/gilbraltar_rpi4.o kernel/lib/gilbraltar_stub.o
