@@ -9,6 +9,7 @@ dev-repo: "git+https://github.com/dinosaure/gilbraltar.git"
 build: [
   ["./configure.sh"
    "--prefix=%{prefix}%"
+   "--target=aarch64-rpi4-none-static"
    "--ocaml-configure-option=--with-afl" {ocaml-option-afl:installed}
    "--ocaml-configure-option=--disable-native-compiler" {ocaml-option-bytecode-only:installed}
    "--ocaml-configure-option=--disable-force-safe-string" {ocaml-option-default-unsafe-string:installed}
@@ -26,6 +27,7 @@ install: [make "install" ]
 depends: [
   "ocamlfind" {build}
   "ocaml-src" {build}
+  "gilbraltar-toolchain" {build}
   "ocaml" {>= "4.08.0" & < "4.14.0"}
 ]
 available: [

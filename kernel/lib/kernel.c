@@ -7,7 +7,7 @@ static uintptr_t sp_at_start;
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
 
-void _start() {
+void main() {
   uintptr_t heap_start;
   size_t    heap_size;
 

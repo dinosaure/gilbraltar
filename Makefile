@@ -2,7 +2,9 @@
 
 include Makeconf
 
-all:	kernel openlibm/libopenlibm.a nolibc/libnolibc.a ocaml rpi4.conf
+# Stage 2 - Cross-compile OCaml with our toolchain
+
+all:	openlibm/libopenlibm.a nolibc/libnolibc.a ocaml rpi4.conf
 
 kernel/include/rpi4.h:
 	$(MAKE) -C kernel include
@@ -127,6 +129,27 @@ rpi4.conf: rpi4.conf.in
 # COMMANDS
 install: all
 	MAKE=$(MAKE) PREFIX=$(MAKECONF_PREFIX) ./install.sh
+
+# Stage 1 - Install toolchain (done by opam install gilbraltar-toolchain)
+
+DEST=$(MAKECONF_PREFIX)
+INSTALL=install -p
+
+install-toolchain: kernel/include/rpi4.h
+	@echo INSTALL toolchain
+	$(INSTALL) -m 0755 toolchain/aarch64-rpi4-none-static-cc $(DEST)/bin
+	$(INSTALL) -m 0755 toolchain/aarch64-rpi4-none-static-ld $(DEST)/bin
+	$(INSTALL) -m 0755 toolchain/aarch64-rpi4-none-static-objcopy $(DEST)/bin
+	mkdir $(DEST)/kernel
+	mkdir $(DEST)/kernel/lib
+	mkdir $(DEST)/kernel/include
+	cd kernel/include && \
+		find . -type d -exec mkdir -p "$(DEST)/kernel/include/{}" \; && \
+		find . -type f -name '*.h' -exec $(INSTALL) -m 0644 "{}" "$(DEST)/kernel/include/{}" \;
+	$(INSTALL) -m 0644 kernel/lib/stub_link.lds $(DEST)/kernel/lib/
+	$(INSTALL) -m 0644 kernel/lib/rpi4_link.lds $(DEST)/kernel/lib/
+	$(INSTALL) -m 0644 kernel/lib/gilbraltar_stub.o $(DEST)/kernel/lib/
+	$(INSTALL) -m 0644 kernel/lib/gilbraltar_rpi4.o $(DEST)/kernel/lib/
 
 uninstall:
 	./uninstall.sh

@@ -13,15 +13,18 @@ CFLAGS= -I../include/ \
 	-DSSP_GUARD_SYMBOL=__stack_chk_guard \
 	-DSSP_FAIL_SYMBOL=__stack_chk_fail \
 	-ffreestanding -nostdinc -nostdlib
-LDFLAGS= -L..lib/
+LDFLAGS= -L. -nostdlib
 
-gilbraltar_rpi4.o: $(filter-out stub.o,$(OBJ))
+boot.o: boot.S
+	$(CC) $(CFLAGS) -c boot.S -o boot.o
+
+gilbraltar_rpi4.o: boot.o $(filter-out stub.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@
-	@echo "OBJCOPY $@"
-	$(OBJCOPY) -w -G uart_\* -G rpi4_startup -G _start\* \
-		-G __stack_chk_guard -G __stack_chk_fail \
-		$@ $@
+#	@echo "OBJCOPY $@"
+#	$(OBJCOPY) -w -G uart_\* -G rpi4_startup -G _start\* \
+#		-G __stack_chk_guard -G __stack_chk_fail \
+#		$@ $@
 
 gilbraltar_stub.o: $(filter-out kernel.o,$(OBJ))
 	@echo "LD $@"
@@ -43,7 +46,7 @@ gilbraltar_stub.o: $(filter-out kernel.o,$(OBJ))
 
 .PHONY: clean
 clean:
-	rm -f $(OBJ) gilbraltar_stub.o gilbraltar_rpi4.o
+	rm -f $(OBJ) boot.o gilbraltar_stub.o gilbraltar_rpi4.o
 
 .PHONY: cleandep
 cleandep:
