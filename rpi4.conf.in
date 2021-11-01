@@ -1,0 +1,8 @@
+path(freestanding) = "@@PREFIX@@/rpi4-sysroot/lib"
+destdir(freestanding) = "@@PREFIX@@/rpi4-sysroot/lib"
+stdlib(freestanding) = "@@PREFIX@@/rpi4-sysroot/lib/ocaml"
+ocamlopt(freestanding) = "@@PREFIX@@/rpi4-sysroot/bin/ocamlopt"
+ocamlc(freestanding) = "@@PREFIX@@/rpi4-sysroot/bin/ocamlc"
+ocamlmklib(freestanding) = "@@PREFIX@@/rpi4-sysroot/bin/ocamlmklib"
+ocamldep(freestanding) = "@@PREFIX@@/rpi4-sysroot/bin/ocamldep"
+ocamlcp(freestanding) = "@@PREFIX@@/rpi4-sysroot/bin/ocamlcp"
