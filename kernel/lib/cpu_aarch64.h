@@ -55,11 +55,19 @@
 /*
  * The remainder of this file is used only from C.
  */
-static inline uint64_t cpu_cntvct(void)
+static inline uint64_t cpu_cntpct(void)
 {
     uint64_t val;
 
-    __asm__ __volatile__("mrs %0, cntvct_el0" : "=r" (val)::);
+    __asm__ __volatile__("mrs %0, cntpct_el0" : "=r" (val)::);
+    return val;
+}
+
+static inline uint64_t cpu_cntfrq(void)
+{
+    uint64_t val;
+
+    __asm__ __volatile__("mrs %0, cntfrq_el0" : "=r"(val)::);
     return val;
 }
 
@@ -68,10 +76,5 @@ static inline uint64_t mul64_32(uint64_t a, uint32_t b, uint8_t s)
     return (a * b) >> s;
 }
 #endif /* !ASM_FILE */
-
-static inline void cpu_set_tls_base(uint64_t base)
-{
-    __asm__ __volatile("msr tpidr_el0, %0" :: "r"(base));
-}
 
 #endif /* __CPU_AARCH64_H__ */

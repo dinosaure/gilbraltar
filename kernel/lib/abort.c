@@ -18,22 +18,39 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-extern uintptr_t SSP_GUARD_SYMBOL;
-
-#include "cpu_aarch64.h"
-
-#define READ_CPU_TICKS cpu_cntpct
+#include "lib.h"
+#include "io.h"
 
 /*
- * This function must be inlined as early as possible once in C code, before
- * calling any other functions. The calling function must not return.
+ * These functions deliberately do not call printf() or malloc() in order to
+ * abort as quickly as possible without triggering further errors.
  */
 
-__attribute__((always_inline)) static inline void crt_init_ssp(void)
+static void puts(const char *s)
 {
-    /*
-     * Initialise the stack canary value.
-     */
-    SSP_GUARD_SYMBOL = READ_CPU_TICKS() + (READ_CPU_TICKS() << 32UL);
-    SSP_GUARD_SYMBOL &= ~(uintptr_t)0xff00;
+    (void)uart_puts(s, strlen(s));
+}
+
+void _assert_fail(const char *file, const char *line, const char *e)
+{
+    puts("Solo5: ABORT: ");
+    puts(file);
+    puts(":");
+    puts(line);
+    puts(": Assertion `");
+    puts(e);
+    puts("' failed\n");
+    for(;;);
+}
+
+void _abort(const char *file, const char *line, const char *s, void *regs_hint)
+{
+    puts("Solo5: ABORT: ");
+    puts(file);
+    puts(":");
+    puts(line);
+    puts(": ");
+    puts(s);
+    puts("\n");
+    for(;;);
 }

@@ -30,7 +30,7 @@ kernel8.elf: $(filter-out stub.o,$(OBJ))
 	echo "void caml_startup(char **argv) { }" > caml.c
 	$(CC) $(CFLAGS) -c caml.c -o caml.o
 	$(CC) $(CFLAGS) -c boot.S -o boot.o
-	$(LD) $(LDFLAGS) boot.o caml.o $^ -L../../nolibc/ -lnolibc -T rpi4_link.lds -o kernel8.elf
+	$(LD) $(LDFLAGS) boot.o $^ caml.o -L../../nolibc/ -lnolibc -T rpi4_link.lds -o kernel8.elf
 	$(RM) caml.c
 	$(RM) caml.o
 	$(RM) boot.o

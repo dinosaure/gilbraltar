@@ -6,10 +6,18 @@
 #include <sys/times.h>
 #include <unistd.h>
 
-extern void uart_puts(const char *buffer, size_t len);
+#include <rpi4.h>
 
+extern void uart_puts(const char *buffer, size_t len); // TODO: add into rpi4.h
+
+/*
+ * Global errno lives in this module.
+ */
 int errno;
 
+/*
+ * Standard output and error "streams".
+ */
 static size_t console_write(FILE *f __attribute__((unused)), const char *s,
         size_t l)
 {
@@ -50,7 +58,7 @@ void abort(void)
 int gettimeofday(struct timeval *tv, struct timezone *tz)
 {
     if (tv != NULL) {
-        uint64_t now = (~0);
+        uint64_t now = mclock();
         tv->tv_sec = now / NSEC_PER_SEC;
         tv->tv_usec = (now % NSEC_PER_SEC) / 1000ULL;
     }
@@ -63,7 +71,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 clock_t times(struct tms *buf)
 {
     memset(buf, 0, sizeof(*buf));
-    return (clock_t) (~0);
+    return (clock_t)mclock();
 }
 
 static uintptr_t sbrk_start;

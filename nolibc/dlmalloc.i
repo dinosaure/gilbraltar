@@ -3167,7 +3167,7 @@ static int init_mparams(void) {
       else
 #endif /* USE_DEV_RANDOM */
 #ifdef __ocaml_freestanding__
-      magic = (size_t)((~0) ^ 0x55555555UL);
+      magic = (size_t)(mclock() ^ 0x55555555UL);
 #else /* __ocaml_freestanding__ */
 #ifdef WIN32
       magic = (size_t)(GetTickCount() ^ (size_t)0x55555555U);
