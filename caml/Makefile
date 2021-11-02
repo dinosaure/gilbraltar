@@ -2,20 +2,7 @@
 
 include Makeconf
 
-# Stage 2 - Cross-compile OCaml with our toolchain
-
 all:	openlibm/libopenlibm.a nolibc/libnolibc.a ocaml rpi4.conf
-
-kernel/include/rpi4.h:
-	$(MAKE) -C kernel include
-
-kernel/lib/gilbraltar_rpi4.o: kernel/include/rpi4.h
-	$(MAKE) -C kernel $(@:kernel/%=%)
-
-kernel/lib/gilbraltar_stub.o: kernel/include/rpi4.h
-	$(MAKE) -C kernel $(@:kernel/%=%)
-
-KERNEL= kernel/include kernel/lib/gilbraltar_rpi4.o kernel/lib/gilbraltar_stub.o
 
 TOP=$(abspath .)
 
@@ -28,14 +15,14 @@ GLOBAL_LIBS=-L$(MAKECONF_PREFIX)/rpi4-sysroot/lib/nolibc/ -lnolibc -lopenlibm $(
 
 # NOLIBC
 NOLIBC_CFLAGS=$(LOCAL_CFLAGS) -I$(TOP)/openlibm/src -I$(TOP)/openlibm/include
-nolibc/libnolibc.a: $(KERNEL)
+nolibc/libnolibc.a:
 	$(MAKE) -C nolibc \
 	    "CC=$(MAKECONF_CC)" \
 	    "FREESTANDING_CFLAGS=$(NOLIBC_CFLAGS)" \
 	    "SYSDEP_OBJS=$(MAKECONF_NOLIBC_SYSDEP_OBJS)"
 
 # OPENLIBM
-openlibm/libopenlibm.a: $(KERNEL)
+openlibm/libopenlibm.a:
 	$(MAKE) -C openlibm "CC=$(MAKECONF_CC)" "CPPFLAGS=$(LOCAL_CFLAGS)" libopenlibm.a
 
 # OCAML
@@ -83,7 +70,7 @@ ocaml/Makefile:
 # 	always enables sockets.
 OC_CFLAGS=$(LOCAL_CFLAGS) -I$(TOP)/openlibm/include -I$(TOP)/openlibm/src -nostdlib
 OC_LIBS=-L$(TOP)/nolibc -lnolibc -L$(TOP)/openlibm -lopenlibm -nostdlib $(MAKECONF_EXTRA_LIBS)
-ocaml/Makefile.config: $(KERNEL) ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
+ocaml/Makefile.config: ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
 	cd ocaml && \
 		CC="$(MAKECONF_CC)" \
 		OC_CFLAGS="$(OC_CFLAGS)" \
@@ -130,34 +117,12 @@ rpi4.conf: rpi4.conf.in
 install: all
 	MAKE=$(MAKE) PREFIX=$(MAKECONF_PREFIX) ./install.sh
 
-# Stage 1 - Install toolchain (done by opam install gilbraltar-toolchain)
-
-DEST=$(MAKECONF_PREFIX)
-INSTALL=install -p
-
-install-toolchain: kernel/include/rpi4.h
-	@echo INSTALL toolchain
-	$(INSTALL) -m 0755 toolchain/aarch64-rpi4-none-static-cc $(DEST)/bin
-	$(INSTALL) -m 0755 toolchain/aarch64-rpi4-none-static-ld $(DEST)/bin
-	$(INSTALL) -m 0755 toolchain/aarch64-rpi4-none-static-objcopy $(DEST)/bin
-	mkdir $(DEST)/kernel
-	mkdir $(DEST)/kernel/lib
-	mkdir $(DEST)/kernel/include
-	cd kernel/include && \
-		find . -type d -exec mkdir -p "$(DEST)/kernel/include/{}" \; && \
-		find . -type f -name '*.h' -exec $(INSTALL) -m 0644 "{}" "$(DEST)/kernel/include/{}" \;
-	$(INSTALL) -m 0644 kernel/lib/stub_link.lds $(DEST)/kernel/lib/
-	$(INSTALL) -m 0644 kernel/lib/rpi4_link.lds $(DEST)/kernel/lib/
-	$(INSTALL) -m 0644 kernel/lib/gilbraltar_stub.o $(DEST)/kernel/lib/
-	$(INSTALL) -m 0644 kernel/lib/gilbraltar_rpi4.o $(DEST)/kernel/lib/
-
 uninstall:
 	./uninstall.sh
 
 clean:
 	$(RM) -r ocaml/
 	$(RM) rpi4.conf
-	$(MAKE) -C kernel clean
 	$(MAKE) -C openlibm clean
 	$(MAKE) -C nolibc \
 	    "FREESTANDING_CFLAGS=$(NOLIBC_CFLAGS)" \
@@ -166,4 +131,3 @@ clean:
 
 distclean: clean
 	rm Makeconf
-	rm Makeconf.sh

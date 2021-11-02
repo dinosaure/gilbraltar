@@ -1,4 +1,6 @@
-#define MAIN_STACK	0x400000
+#include "sysregs.h"
+
+#define MAIN_STACK 0x30000000
 
 .section ".text.boot"  // Make sure the linker puts this at the start of the kernel image
 
@@ -9,6 +11,7 @@ _start:
     mrs     x1, mpidr_el1
     and     x1, x1, #3
     cbz     x1, 2f
+
     // We're not on the main core, so hang in an infinite wait loop
     adr     x5, spin_cpu0
 1:  wfe
@@ -27,11 +30,33 @@ _start:
     br      x4
     b       1b
 2:  // We're on the main core!
+    // First enable the FPU
 
-    // Set stack to start below our code
-    ldr     x1, =_start
-    mov     sp, x1
+    mov     x0, #0x33ff
+    msr     cptr_el3, x0 	 // Disable coprocessor traps to EL3
+    mov     x0, #3 << 20
+    msr     cpacr_el1, x0	 // Enable FP/SIMD at EL1
 
+    // Now get ready to switch from EL3 down to EL1
+
+    ldr     x0, =SCTLR_VALUE_MMU_DISABLED
+    msr	    sctlr_el1, x0		
+
+    ldr     x0, =HCR_VALUE
+    msr     hcr_el2, x0
+
+    ldr     x0, =SCR_VALUE
+    msr     scr_el3, x0
+
+    ldr     x0, =SPSR_VALUE
+    msr     spsr_el3, x0
+    
+    adr     x0, el1_entry		
+    msr     elr_el3, x0
+
+    eret			
+el1_entry:
+    // We're in EL1
     // Clean the BSS section
     ldr     x1, =__bss_start     // Start address
     ldr     w2, =__bss_size      // Size of the section
@@ -40,7 +65,8 @@ _start:
     sub     w2, w2, #1
     cbnz    w2, 3b               // Loop if non-zero
 
-    mov	    sp, #MAIN_STACK
+    // Set stack to start somewhere safe
+    mov     sp, #MAIN_STACK
 
     // Jump to our main() routine in C (make sure it doesn't return)
 4:  bl      main
@@ -69,4 +95,8 @@ spin_cpu2:
 spin_cpu3:
         .quad 0
 
-
+.globl get_el
+get_el:
+	mrs x0, CurrentEL
+	lsr x0, x0, #2
+	ret

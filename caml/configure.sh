@@ -1,5 +1,7 @@
 #!/bin/sh
 
+TARGET="${TARGET:-aarch64-rpi4-none-static}"
+
 prog_NAME="$(basename $0)"
 
 err()
@@ -26,7 +28,7 @@ Configures the ocaml-rpi4 build system.
 Options:
     --prefix=DIR:
         Installation prefix (default: /usr/local).
-    --target=TARGET
+    --target=TARGET (= $TARGET)
         RPi4 compiler toolchain to use.
     --ocaml-configure-option=OPTION
         Add an option to the OCaml compiler configuration.
@@ -35,7 +37,7 @@ EOM
 }
 
 OCAML_CONFIGURE_OPTIONS=
-CONFIG_TARGET=$(pwd)/toolchain/aarch64-rpi4-none-static # The default (and only one) toolchain
+CONFIG_TARGET="$TARGET"
 MAKECONF_PREFIX=/usr/local
 while [ $# -gt 0 ]; do
     OPT="$1"
@@ -108,16 +110,4 @@ MAKECONF_OCAML_BUILD_ARCH=${OCAML_BUILD_ARCH}
 MAKECONF_OCAML_CONFIGURE_OPTIONS=${OCAML_CONFIGURE_OPTIONS}
 MAKECONF_NOLIBC_SYSDEP_OBJS=rpi4.o
 MAKECONF_EXTRA_LIBS=${EXTRA_LIBS}
-
-CONFIG_TARGET_CC=aarch64-linux-gnu-gcc
-CONFIG_TARGET_LD=aarch64-linux-gnu-ld
-CONFIG_TARGET_OBJCOPY=aarch64-linux-gnu-objcopy
-CONFIG_HOST=Linux
 EOM
-# CONF_TARGET is used by `toolchain/gen-headers.sh`. They are not properly set
-# if the user want to use `clang` or MacOS/FreeBSD/OpenBSD, TODO!
-
-#
-# Generate Makeconf.sh, to be included by shell scripts.
-#
-sed -Ee 's/^([A-Z_]+)=(.*)$/\1="\2"/' Makeconf >Makeconf.sh

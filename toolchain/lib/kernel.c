@@ -12,11 +12,10 @@ extern void caml_startup(char **);
 extern int errno;
 
 void main() {
-  log_set_level(DEBUG);
-  crt_init_ssp();
-
   uintptr_t heap_start;
   size_t    heap_size;
+
+  crt_init_ssp();
 
   uart_init();
   mclock_init();
@@ -29,9 +28,9 @@ void main() {
   mem_init();
   mem_lock_heap(&heap_start, &heap_size);
 
-  sp_at_start = (uintptr_t) &heap_start;
   _nolibc_init(heap_start, heap_size);
 
   caml_startup(unused_args);
+
   for(;;);
 }

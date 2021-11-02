@@ -3,12 +3,6 @@
  (link_flags -g -w +A-4-41-42-44 -bin-annot -strict-sequence -principal
   -safe-string -color always -cclib "-z rpi4-abi=rpi4"))
 
-(rule
- (alias runtest)
- (enabled_if (= %{context_name} rpi4))
- (deps main.exe)
- (action (run file main.exe)))
-
 (alias
  (name default)
  (enabled_if (= %{context_name} rpi4)))
