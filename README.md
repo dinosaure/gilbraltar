@@ -14,7 +14,7 @@ toolchain (as `ocaml-freestanding`) specialized for Raspberry Pi 4.
 
 The project is split into 2 packages:
 - `toolchain` which contains the C kernel
-- `caml` which is a copy of [`ocaml-freestanding`][] for our kernel
+- `caml` which is a copy of [ocaml-freestanding][] for our kernel
 
 The goal of this repository is to bootstrap a caml runtime from nothing. The
 caml runtime is linked to `nolibc` and `openlibm` statically. Then, it provides
