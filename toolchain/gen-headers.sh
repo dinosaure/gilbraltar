@@ -61,7 +61,7 @@ cc_get_header_deps()
 
 [ "$#" -ne 1 ] && die "Missing DESTDIR"
 DESTDIR=$1
-. ../Makeconf.sh || die "Can't find ../Makeconf.sh"
+. ./Makeconf.sh || die "Can't find . ./Makeconf.sh"
 
 mkdir -p ${DESTDIR} || die "mkdir failed"
 
