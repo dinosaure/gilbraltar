@@ -13,7 +13,7 @@ for RaspberryPi 4. It's a work in progress repository to provide a `dune`'s
 toolchain (as `ocaml-freestanding`) specialized for Raspberry Pi 4.
 
 The project is split into 2 packages:
-- `toolchain` which contains the C kernel
+- `kernel` which contains the C kernel
 - `caml` which is a copy of [ocaml-freestanding][] for our kernel
 
 The goal of this repository is to bootstrap a caml runtime from nothing. The
@@ -24,7 +24,7 @@ with `dune` (as far as your context is `rpi4`).
 A full example of an `Hello World` bare-metal OS is available into `test` where
 a small ceremony is needed to compile the program for your Raspberry Pi 4 - be
 aware that you must take the `rpi4` artifact (and not the `default` one which
-is compiled with `toolchain/lib/stub.c`).
+is compiled with `kernel/lib/stub.c`).
 
 This project by its conception is mainly inspired by:
 - [Solo5][] for the _toolchain_ layout

@@ -7,8 +7,8 @@ license: "MIT"
 tags: "org:mirage"
 dev-repo: "git+https://github.com/dinosaure/gilbraltar.git"
 build: [
-  [ "sh" "-c" "cd toolchain ; ./configure.sh --prefix=%{prefix}%" ]
-  [ "sh" "-c" "cd toolchain ; %{make}% all" ]
+  [ "sh" "-c" "cd kernel ; ./configure.sh --prefix=%{prefix}%" ]
+  [ "sh" "-c" "cd kernel ; %{make}% all" ]
 ]
 install: [ "sh" "-c" "cd toolchain ; %{make}% install" ]
 depends: [ ]

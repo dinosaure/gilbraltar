@@ -9,6 +9,7 @@ SECTIONS
     _erodata = .;
     PROVIDE(_data = .);
     .data : { *(.data .data.* .gnu.linkonce.d*) }
+    _edata = .;
     .bss (NOLOAD) : {
         . = ALIGN(16);
         __bss_start = .;
@@ -34,6 +35,7 @@ SECTIONS
         . = . + 512;
         __cpu3_stack  = .;
     }
+    . = ALIGN(CONSTANT(MAXPAGESIZE));
     _end = .;
 
    /DISCARD/ : { *(.comment) *(.gnu*) *(.note*) *(.eh_frame*) }
