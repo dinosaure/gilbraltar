@@ -10,7 +10,7 @@ build: [
   [ "sh" "-c" "cd kernel ; ./configure.sh --prefix=%{prefix}%" ]
   [ "sh" "-c" "cd kernel ; %{make}% all" ]
 ]
-install: [ "sh" "-c" "cd toolchain ; %{make}% install" ]
+install: [ "sh" "-c" "cd kernel ; %{make}% install" ]
 depends: [ ]
 depexts: [
   ["linux-headers"] {os-distribution = "alpine"}
