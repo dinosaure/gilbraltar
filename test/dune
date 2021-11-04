@@ -11,5 +11,5 @@
  (action (copy main.exe kernel8.elf)))
 
 (alias
- (name default)
+ (name runtest)
  (enabled_if (= %{context_name} rpi4)))

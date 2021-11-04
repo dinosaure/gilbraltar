@@ -1,0 +1,15 @@
+(dirs :standard \ caml/ocaml)
+
+(data_only_dirs caml)
+
+(rule
+ (deps (source_tree caml))
+ (targets libnolibc.a
+	  libopenlibm.a)
+ (package gilbraltar)
+ (action
+  (no-infer
+   (progn
+    (chdir caml (run ./configure && make))
+    (copy nolibc/libnolibc.a libnolibc.a)
+    (copy openlibm/libopenlibm.a libopenlibm.a)))))
