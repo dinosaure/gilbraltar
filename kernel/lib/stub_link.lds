@@ -1,5 +1,8 @@
+ENTRY(_start)
+
 SECTIONS
 {
+    . = 0x0100000;
     _stext = .;
     .text : { KEEP(*(.text.boot)) *(.text .text.* .gnu.linkonce.t*) }
     . = ALIGN(CONSTANT(MAXPAGESIZE));
@@ -17,23 +20,6 @@ SECTIONS
         *(COMMON)
         __bss_end = .;
         __bss_size = (__bss_end - __bss_start)>>3;
-    }
-    .cpu1Stack :
-    {
-        . = ALIGN(16);
-        __stack_start  = .;
-        . = . + 512;
-        __cpu1_stack  = .;
-    }
-    .cpu2Stack :
-    {
-        . = . + 512;
-        __cpu2_stack  = .;
-    }
-    .cpu3Stack :
-    {
-        . = . + 512;
-        __cpu3_stack  = .;
     }
     . = ALIGN(CONSTANT(MAXPAGESIZE));
     _end = .;
