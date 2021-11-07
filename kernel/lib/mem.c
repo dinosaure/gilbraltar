@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015-2019 Contributors as noted in the AUTHORS file
  *
- * This file is part of Solo5, a sandboxed execution environment.
+ * This file is part of Gilbraltar, a bare-metal OS for RPi4.
  *
  * Permission to use, copy, modify, and/or distribute this software
  * for any purpose with or without fee is hereby granted, provided

@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright (c) 2015-2020 Solo5 Contributors
+# Copyright (c) 2021 Romain Calascibetta
 #
 # This file is part of Gilbraltar, a bare-metal OS for RPi4.
 #
@@ -50,7 +51,7 @@ usage()
     cat <<EOM 1>&2
 usage: ${prog_NAME} [ OPTIONS ]
 
-Configures the Solo5 build system.
+Configures the RPi4 build system.
 
 Options:
     --prefix=DIR
