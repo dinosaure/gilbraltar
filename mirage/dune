@@ -1,0 +1,8 @@
+(library
+ (name oS)
+ (public_name mirage-gilbraltar)
+ (private_modules main time)
+ (foreign_stubs
+  (language c)
+  (names yield))
+ (libraries mirage-runtime bheap lwt cstruct duration))

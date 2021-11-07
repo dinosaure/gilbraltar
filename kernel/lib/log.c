@@ -56,6 +56,39 @@ int log(log_level_t level, const char *fmt, ...)
     }
 }
 
+int log_actual(log_level_t level, const char *fmt, ...)
+{
+    if (log_level < level) {
+        return 0;
+    }
+
+    va_list args;
+    size_t size;
+    /*
+     * buffer[] might be on an IST stack, so pick an arbitrary-but-not-too-big
+     * size (4 display lines).
+     */
+    char buffer[320];
+
+    va_start(args, fmt);
+    size = vsnprintf(buffer, sizeof buffer, fmt, args);
+    va_end(args);
+
+    /*
+     * If the message doesn't fit into the buffer, at least try and tell the
+     * user about it.
+     */
+    if (size >= sizeof buffer) {
+        const char trunc[] = "(truncated)\n";
+        uart_puts_actual(buffer, sizeof buffer - 1);
+        uart_puts_actual(trunc, sizeof trunc - 1);
+        return sizeof buffer - 1;
+    } else {
+        uart_puts_actual(buffer, size);
+        return size;
+    }
+}
+
 void log_set_level(log_level_t level)
 {
     log_level = level;

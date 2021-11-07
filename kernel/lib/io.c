@@ -1,5 +1,7 @@
 #include <stddef.h>
 
+#include "log.h"
+
 // GPIO
 
 enum {
@@ -157,6 +159,13 @@ void uart_puts(const char *buffer, size_t len) {
   while (len--) {
        if (*buffer == '\n') uart_write_byte_blocking('\r');
        uart_write_byte_blocking(*buffer++);
+  }
+}
+
+void uart_puts_actual(const char *buffer, size_t len) {
+  while (len--) {
+       if (*buffer == '\n') uart_write_byte_blocking_actual('\r');
+       uart_write_byte_blocking_actual(*buffer++);
   }
 }
 

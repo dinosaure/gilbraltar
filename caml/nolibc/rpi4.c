@@ -9,6 +9,8 @@
 #include <rpi4.h>
 
 extern void uart_puts(const char *buffer, size_t len); // TODO: add into rpi4.h
+extern void uart_puts_actual(const char *buffer, size_t len); // TODO: add into rpi4.h
+extern void uart_drain_output_queue(void); // TODO: add into rpi4.h
 
 /*
  * Global errno lives in this module.
@@ -22,6 +24,7 @@ static size_t console_write(FILE *f __attribute__((unused)), const char *s,
         size_t l)
 {
     uart_puts(s, l);
+    uart_drain_output_queue();
     return l;
 }
 
@@ -33,6 +36,7 @@ ssize_t write(int fd, const void *buf, size_t count)
 {
     if (fd == 1 || fd == 2) {
         uart_puts(buf, count);
+        uart_drain_output_queue();
         return count;
     }
     errno = ENOSYS;
@@ -46,7 +50,7 @@ void exit(int status)
 
 void abort(void)
 {
-    uart_puts("Aborted\n", 8);
+    uart_puts_actual("Aborted\n", 8);
     for (;;);
 }
 
