@@ -23,3 +23,5 @@ The directory provides 2 ELF files:
 The first ELF file is used to craft the Operating System. It includes the
 _bootstrap_ instruction. The second ELF is used to help some `configure.sh`
 files to link and **run** some programs.
+
+[Solo5]: https://github.com/Solo5/solo5
