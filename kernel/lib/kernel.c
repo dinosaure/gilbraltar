@@ -29,6 +29,7 @@ void main() {
   mem_lock_heap(&heap_start, &heap_size);
 
   _nolibc_init(heap_start, heap_size);
+  uart_drain_output_queue();
 
   caml_startup(unused_args);
 

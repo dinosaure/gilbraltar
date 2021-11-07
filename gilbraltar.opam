@@ -8,7 +8,7 @@ tags: "org:mirage"
 dev-repo: "git+https://github.com/dinosaure/gilbraltar.git"
 build: [
   ["sh" "-c" "cd caml ; ./configure.sh --prefix=%{prefix}%" ]
-  ["sh" "-c" "cd caml ; %{make}% -j1"]
+  ["sh" "-c" "cd caml ; %{make}% -j%{jobs}%"]
 ]
 install: ["sh" "-c" "cd caml ; %{make}% install" ]
 depends: [
@@ -25,4 +25,3 @@ available: [
 synopsis: "Raspberry Pi 4 OCaml compiler"
 description:
   "This package provides a freestanding OCaml cross-compiler, suitable for linking with a unikernel base layer for Raspberry Pi 4."
-version: "0.1.0"

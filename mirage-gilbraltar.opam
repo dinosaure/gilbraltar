@@ -1,0 +1,28 @@
+opam-version: "2.0"
+maintainer:   "Romain Calascibetta <romain.calascibetta@gmail.com>"
+homepage:     "https://github.com/dinosaure/gilbraltar"
+bug-reports:  "https://github.com/dinosaure/gilbraltar/issues/"
+dev-repo:     "git+https://github.com/dinosaure/gilbraltar.git"
+license:      "ISC"
+authors: [
+  "Romain Calascibetta <romain.calascibetta@gmail.com>"
+]
+tags: [
+  "org:mirage"
+]
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs ]
+]
+depends: [
+  "dune"           {>= "2.6.0"}
+  "bheap"          {>= "2.0.0"}
+  "cstruct"        {>= "1.0.1"}
+  "lwt"            {>= "2.4.3"}
+  "mirage-runtime" {>= "3.7.0"}
+  "duration"
+]
+synopsis: "Gilbraltar and MirageOS"
+description: """
+Gilbraltar and MirageOS
+"""

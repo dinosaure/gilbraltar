@@ -26,4 +26,3 @@ available: [
 synopsis: "Raspberry Pi 4 OCaml compiler"
 description:
   "This package provides a freestanding OCaml cross-compiler, suitable for linking with a unikernel base layer for Raspberry Pi 4."
-version: "0.1.0"
