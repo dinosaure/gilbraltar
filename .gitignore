@@ -2,9 +2,9 @@ Makeconf
 Makeconf.sh
 ocaml-freestanding.pc
 freestanding.conf
-nolibc/*.o
-nolibc/*.a
-nolibc/test-include/
+caml/nolibc/*.o
+caml/nolibc/*.a
+caml/nolibc/test-include/
 ocaml/
 _build/
 kernel/include

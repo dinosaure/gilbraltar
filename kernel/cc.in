@@ -83,7 +83,6 @@ case ${M} in
             -isystem ${I}/@@CONFIG_TARGET_TRIPLE@@ \
             -I ${I} \
             -ffreestanding \
-            -fstack-protector-strong \
             "$@"
         ;;
     link)
@@ -94,7 +93,6 @@ case ${M} in
             -isystem ${I}/@@CONFIG_TARGET_TRIPLE@@ \
             -I ${I} \
             -ffreestanding \
-            -fstack-protector-strong \
             @@CONFIG_TARGET_CC_LDFLAGS@@ \
             -nostdlib \
             -L ${L} \

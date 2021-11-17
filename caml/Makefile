@@ -73,7 +73,7 @@ OC_LIBS=-L$(TOP)/nolibc -lnolibc -L$(TOP)/openlibm -lopenlibm -nostdlib $(MAKECO
 ocaml/Makefile.config: ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
 	cd ocaml && \
 		CC="$(MAKECONF_CC)" \
-		OC_CFLAGS="$(OC_CFLAGS)" \
+		OC_CFLAGS="$(OC_CFLAGS) -DDEBUG" \
 		OCAMLC_CFLAGS="$(GLOBAL_CFLAGS)" \
 		AS="$(MAKECONF_AS)" \
 		ASPP="$(MAKECONF_CC) $(OC_CFLAGS) -c" \
