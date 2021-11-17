@@ -1,42 +1,43 @@
+ENTRY(_start)
+ 
 SECTIONS
 {
-    _stext = .;
-    .text : { KEEP(*(.text.boot)) *(.text .text.* .gnu.linkonce.t*) }
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
-    _etext = .;
-    .rodata : { *(.rodata .rodata.* .gnu.linkonce.r*) }
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
-    _erodata = .;
-    PROVIDE(_data = .);
-    .data : { *(.data .data.* .gnu.linkonce.d*) }
-    _edata = .;
-    .bss (NOLOAD) : {
-        . = ALIGN(16);
-        __bss_start = .;
-        *(.bss .bss.*)
-        *(COMMON)
-        __bss_end = .;
-        __bss_size = (__bss_end - __bss_start)>>3;
-    }
-    .cpu1Stack :
+    /* Starts at LOADER_ADDR. */
+    . = 0x80000;
+    __start = .;
+    __text_start = .;
+    .text :
     {
-        . = ALIGN(16);
-        __stack_start  = .;
-        . = . + 512;
-        __cpu1_stack  = .;
+        KEEP(*(.text.boot))
+        *(.text)
     }
-    .cpu2Stack :
+    . = ALIGN(4096); /* align to page size */
+    __text_end = .;
+ 
+    __rodata_start = .;
+    .rodata :
     {
-        . = . + 512;
-        __cpu2_stack  = .;
+        *(.rodata)
     }
-    .cpu3Stack :
+    . = ALIGN(4096); /* align to page size */
+    __rodata_end = .;
+ 
+    __data_start = .;
+    .data :
     {
-        . = . + 512;
-        __cpu3_stack  = .;
+        *(.data)
     }
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
-    _end = .;
-
-   /DISCARD/ : { *(.comment) *(.gnu*) *(.note*) *(.eh_frame*) }
+    . = ALIGN(4096); /* align to page size */
+    __data_end = .;
+ 
+    __bss_start = .;
+    .bss :
+    {
+        bss = .;
+        *(.bss)
+    }
+    . = ALIGN(4096); /* align to page size */
+    __bss_end = .;
+    __bss_size = __bss_end - __bss_start;
+    __end = .;
 }

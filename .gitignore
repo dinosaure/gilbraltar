@@ -7,3 +7,8 @@ nolibc/*.a
 nolibc/test-include/
 ocaml/
 _build/
+kernel/include
+kernel/bin
+kernel/lib/*.o
+kernel/lib/*.d
+kernel/lib/*.elf

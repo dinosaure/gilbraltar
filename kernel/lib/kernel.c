@@ -2,20 +2,18 @@
 #include "log.h"
 #include "mem.h"
 #include "mclock.h"
-#include "crt_init.h"
 
-static char *unused_args[] = { "mirage", NULL };
+static char *unused_args[] = {"mirage", NULL};
 static uintptr_t sp_at_start;
 
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
 extern int errno;
 
-void main() {
+void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3)
+{
   uintptr_t heap_start;
-  size_t    heap_size;
-
-  crt_init_ssp();
+  size_t heap_size;
 
   uart_init();
   mclock_init();
@@ -33,5 +31,5 @@ void main() {
 
   caml_startup(unused_args);
 
-  for(;;);
+  for (;;);
 }

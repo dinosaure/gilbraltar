@@ -18,9 +18,9 @@
 # NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-TARGET_CC="${TARGET_CC:-aarch64-linux-gnu-gcc}"
-TARGET_LD="${TARGET_LD:-aarch64-linux-gnu-ld}"
-TARGET_OBJCOPY="${TARGET_OBJCOPY:-aarch64-linux-gnu-objcopy}"
+TARGET_CC="${TARGET_CC:-aarch64-none-elf-gcc}"
+TARGET_LD="${TARGET_LD:-aarch64-none-elf-ld}"
+TARGET_OBJCOPY="${TARGET_OBJCOPY:-aarch64-none-elf-objcopy}"
 
 prog_NAME="$(basename $0)"
 

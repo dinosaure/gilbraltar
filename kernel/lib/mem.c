@@ -47,22 +47,22 @@ void mem_lock_heap(uintptr_t *start, size_t *size)
 
 void mem_init(void)
 {
-    extern char _stext[], _etext[], _erodata[], _end[];
+    extern char __text_start[], __text_end[], __rodata_end[], __end[];
     uint64_t mem_size;
 
     mem_size = MEMORY_SIZE;
-    heap_start = ((uint64_t)&_end + PAGE_SIZE - 1) & PAGE_MASK;
+    heap_start = ((uint64_t)&__end + PAGE_SIZE - 1) & PAGE_MASK;
 
     log(INFO, "RPi4: Memory map: %llu MB addressable:\n",
             (unsigned long long)mem_size >> 20);
     log(INFO, "RPi4:   reserved @ (0x0 - 0x%llx)\n",
-            (unsigned long long)_stext-1);
+            (unsigned long long)__text_start-1);
     log(INFO, "RPi4:       text @ (0x%llx - 0x%llx)\n",
-            (unsigned long long)_stext, (unsigned long long)_etext-1);
+            (unsigned long long)__text_start, (unsigned long long)__text_end-1);
     log(INFO, "RPi4:     rodata @ (0x%llx - 0x%llx)\n",
-            (unsigned long long)_etext, (unsigned long long)_erodata-1);
+            (unsigned long long)__text_end, (unsigned long long)__rodata_end-1);
     log(INFO, "RPi4:       data @ (0x%llx - 0x%llx)\n",
-            (unsigned long long)_erodata, (unsigned long long)_end-1);
+            (unsigned long long)__rodata_end, (unsigned long long)__end-1);
     log(INFO, "RPi4:       heap >= 0x%llx < stack < 0x%llx\n",
             (unsigned long long)heap_start, (unsigned long long)mem_size);
 }

@@ -9,7 +9,6 @@ all:
 all := bin/$(CONFIG_TARGET_TRIPLE)-cc \
        bin/$(CONFIG_TARGET_TRIPLE)-ld \
        bin/$(CONFIG_TARGET_TRIPLE)-objcopy \
-       include/$(CONFIG_TARGET_TRIPLE) \
        lib/gilbraltar_rpi4.elf \
        lib/gilbraltar_stub.elf
 
@@ -30,17 +29,10 @@ bin/$(CONFIG_TARGET_TRIPLE)-%: %.in | bin
 	    $< >$@
 	chmod +x $@
 
-include:
-	mkdir -p $@
-
-include/$(CONFIG_TARGET_TRIPLE): | include
-	@echo "GEN $@"
-	./gen-headers.sh $@
-
-lib/gilbraltar_stub.elf: include/$(CONFIG_TARGET_TRIPLE)
+lib/gilbraltar_stub.elf:
 	$(MAKE) -j1 -C lib gilbraltar_stub.elf
 
-lib/gilbraltar_rpi4.elf: include/$(CONFIG_TAREGT_TRIPLE)
+lib/gilbraltar_rpi4.elf:
 	$(MAKE) -j1 -C lib gilbraltar_rpi4.elf
 
 all: $(all)
@@ -58,10 +50,6 @@ install-toolchain: $(all)
 	$(INSTALL) -m 0755 bin/$(CONFIG_TARGET_TRIPLE)-ld $(CONFIG_PREFIX)/bin
 	$(INSTALL) -m 0755 bin/$(CONFIG_TARGET_TRIPLE)-objcopy $(CONFIG_PREFIX)/bin
 	mkdir -p $(TOOLCHAIN_INCDIR) $(TOOLCHAIN_LIBDIR)
-	cd include/$(CONFIG_TARGET_TRIPLE) && \
-	    find . -type d -exec mkdir -p "$(TOOLCHAIN_INCDIR)/{}" \; && \
-	    find . -type f -name '*.h' -exec $(INSTALL) -m 0644 \
-	    "{}" "$(TOOLCHAIN_INCDIR)/{}" \;
 	$(INSTALL) -m 0644 lib/gilbraltar_stub.elf $(TOOLCHAIN_LIBDIR)
 	$(INSTALL) -m 0644 lib/gilbraltar_rpi4.elf $(TOOLCHAIN_LIBDIR)
 	$(INSTALL) -m 0644 lib/rpi4_link.lds $(TOOLCHAIN_LIBDIR)
