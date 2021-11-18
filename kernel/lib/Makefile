@@ -15,7 +15,8 @@ CFLAGS= -I../include/$(CONFIG_TARGET_TRIPLE) \
 	-DSSP_GUARD_SYMBOL=__stack_chk_guard \
 	-DSSP_FAIL_SYMBOL=__stack_chk_fail \
 	-std=c11 \
-	-ffreestanding -fstack-protector-strong -nostdinc -nostdlib
+	-ffreestanding -fstack-protector-strong -nostdinc -nostdlib \
+	-nostartfiles
 LDFLAGS= -L. -nostdlib
 
 boot.o: boot.S
