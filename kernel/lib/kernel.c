@@ -11,7 +11,7 @@ extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
 extern int errno;
 
-void main() {
+void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3) {
   uintptr_t heap_start;
   size_t    heap_size;
 
