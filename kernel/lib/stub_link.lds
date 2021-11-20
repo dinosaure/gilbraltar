@@ -1,28 +1,57 @@
-ENTRY(_start)
+__rpi_load_addr = 0x80000;
+
+ENTRY(__rpi_load_addr)
+
+PHDRS
+{
+    segment_rx PT_LOAD FLAGS(5); /* 5 == RX */
+    segment_rw PT_LOAD FLAGS(6); /* 6 == RW */
+}
 
 SECTIONS
 {
-    . = 0x0100000;
+    . = __rpi_load_addr;
+    __start = .;
+
     __text_start = .;
-    .text : { KEEP(*(.text.boot)) *(.text .text.* .gnu.linkonce.t*) }
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
+    .text :
+    {
+      KEEP(*(.text._start))
+      *(.text*)
+    } :segment_rx
     __text_end = .;
-    .rodata : { *(.rodata .rodata.* .gnu.linkonce.r*) }
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
+
+    __rodata_start = .;
+    .rodata : ALIGN(8)
+    {
+      *(.rodata*)
+    } :segment_rx
     __rodata_end = .;
-    PROVIDE(__data_start = .);
-    .data : { *(.data .data.* .gnu.linkonce.d*) }
+
+    __got_start = .;
+    .got : ALIGN(8)
+    {
+      *(.got*)
+    } :segment_rx
+    __got_end = .;
+
+    __data_start = .;
+    .data :
+    {
+      *(.data*)
+    } :segment_rw
     __data_end = .;
-    .bss (NOLOAD) : {
-        . = ALIGN(16);
+
+    .bss (NOLOAD) : ALIGN(16)
+    {
         __bss_start = .;
-        *(.bss .bss.*)
-        *(COMMON)
-        __bss_end = .;
-        __bss_size = (__bss_end - __bss_start)>>3;
-    }
-    . = ALIGN(CONSTANT(MAXPAGESIZE));
+        *(.bss*);
+	. = ALIGN(16);
+	__bss_end_exclusive = .;
+    } :NONE
+
     __end = .;
+    __boot_core_stack_end_exclusive = 0x30000000;
 
    /DISCARD/ : { *(.comment) *(.gnu*) *(.note*) *(.eh_frame*) }
 }

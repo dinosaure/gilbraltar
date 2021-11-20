@@ -1,27 +1,36 @@
-// AArch64 mode
+.macro ADR_REL register, symbol
+  adrp \register, \symbol
+  add  \register, \register, #:lo12:\symbol
+.endm
 
-// To keep this in the first portion of the binary.
-.section ".text.boot"
-.globl _start
+.equ _core_id_mask, 0b11
 
-// Entry point for the kernel. Registers:
-// x0 -> 32 bit pointer to DTB in memory (primary core only) / 0 (secondary cores)
-// x1 -> 0
-// x2 -> 0
-// x3 -> 0
-// x4 -> 32 bit kernel entry point, _start location
+.section .text._start
+
 _start:
-    mov     sp, #0x30000000
+        mrs     x1, MPIDR_EL1
+        and     x1, x1, _core_id_mask
+	mov     x2, #0
+	cmp     x1, x2
+	b.ne    .L_parking_loop
+.L_bss_init_loop:
+        ADR_REL x0, __bss_start
+        ADR_REL x1, __bss_end_exclusive
+.L_bss_loop:
+        cmp     x0, x1
+        b.eq    .L_prepare_c
+        stp     xzr, xzr, [x0], #16
+        b       .L_bss_loop
+.L_prepare_c:
+        ADR_REL x0, __boot_core_stack_end_exclusive
+        mov     sp, x0
+.L_jump:
+        bl      _start_c
+	b	.L_parking_loop
+.L_parking_loop:
+        wfe
+        b       .L_parking_loop
 
-    // clear bss
-    ldr     x5, =__bss_start
-    ldr     w6, =__bss_size
-3:  cbz     w6, 4f
-    str     xzr, [x5], #8
-    sub     w6, w6, #1
-    cbnz    w6, 3b
- 
-    // jump to C code, should not return
-4:  bl      kernel_main
-1:  wfe
-    b 1b
+.size   _start, . - _start
+.type   _start, function
+.global _start

@@ -8,11 +8,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+extern void uart_drain_output_queue(void);
+
 #define STUB_ABORT(function) \
     int __unsup_##function(void) __asm__(#function) __attribute__((noreturn)); \
     int __unsup_##function(void) \
     { \
         printf("STUB: abort: %s() called\n", #function); \
+        uart_drain_output_queue(); \
 	abort(); \
     }
 
@@ -28,6 +31,7 @@
         static int called = 1; \
         if (!called) {\
             printf("STUB: %s() called\n", #function); \
+            uart_drain_output_queue(); \
             called = 1; \
         } \
 	errno = ENOSYS; \

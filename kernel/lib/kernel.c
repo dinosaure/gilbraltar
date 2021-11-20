@@ -1,17 +1,15 @@
 #include "io.h"
+#include "lib.h"
 #include "log.h"
 #include "mem.h"
 #include "mclock.h"
 #include "crt_init.h"
 
-static char *unused_args[] = { "mirage", NULL };
-static uintptr_t sp_at_start;
-
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
-extern int errno;
+static char* args[] = { "gi(l)braltar", NULL };
 
-void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3) {
+void _start_c() {
   uintptr_t heap_start;
   size_t    heap_size;
 
@@ -31,7 +29,7 @@ void kernel_main(uint64_t dtb_ptr32, uint64_t x1, uint64_t x2, uint64_t x3) {
   _nolibc_init(heap_start, heap_size);
   uart_drain_output_queue();
 
-  caml_startup(unused_args);
+  caml_startup(args);
 
   for(;;);
 }
