@@ -1,36 +1,19 @@
 #include <string.h>
 #include <stdint.h>
+#include <stdio.h>
 
-#define WT size_t
-#define WS (sizeof(WT))
-
-void *memmove(void *dest, const void *src, size_t n)
+void *memmove(void *v_dst, const void *v_src, size_t len)
 {
-	char *d = dest;
-	const char *s = src;
+  char *dst = v_dst;
+  const char *src = v_src;
 
-	if (d==s) return d;
-	if (s+n <= d || d+n <= s) return memcpy(d, s, n);
+  if (dst == src) return dst;
+  if (src + len <= dst || dst + len <= src) return memcpy(dst, src, len) ;
 
-	if (d<s) {
-		if ((uintptr_t)s % WS == (uintptr_t)d % WS) {
-			while ((uintptr_t)d % WS) {
-				if (!n--) return dest;
-				*d++ = *s++;
-			}
-			for (; n>=WS; n-=WS, d+=WS, s+=WS) *(WT *)d = *(WT *)s;
-		}
-		for (; n; n--) *d++ = *s++;
-	} else {
-		if ((uintptr_t)s % WS == (uintptr_t)d % WS) {
-			while ((uintptr_t)(d+n) % WS) {
-				if (!n--) return dest;
-				d[n] = s[n];
-			}
-			while (n>=WS) n-=WS, *(WT *)(d+n) = *(WT *)(s+n);
-		}
-		while (n) n--, d[n] = s[n];
-	}
+  if (dst < src)
+    for (; len; len--) *dst++ = *src++;
+  else
+    while (len) len--, dst[len] = src[len];
 
-	return dest;
+  return dst;
 }

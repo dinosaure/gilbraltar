@@ -26,7 +26,9 @@
 #define PAGE_SHIFT	12
 #define PAGE_MASK	~(0xfff)
 
-#define MEMORY_SIZE	0x30000000 /* 768Mb */
+extern char __boot_core_stack_end_exclusive[];
+
+#define MEMORY_SIZE	__boot_core_stack_end_exclusive
 
 static uint64_t heap_start;
 
@@ -42,7 +44,7 @@ void mem_lock_heap(uintptr_t *start, size_t *size)
 {
     mem_locked = 1;
     *start = heap_start;
-    *size = MEMORY_SIZE - heap_start;
+    *size = ((unsigned long long) MEMORY_SIZE) - heap_start;
 }
 
 void mem_init(void)
@@ -50,7 +52,7 @@ void mem_init(void)
     extern char __text_start[], __text_end[], __rodata_end[], __end[];
     uint64_t mem_size;
 
-    mem_size = MEMORY_SIZE;
+    mem_size = (unsigned long long) MEMORY_SIZE;
     heap_start = ((uint64_t)&__end + PAGE_SIZE - 1) & PAGE_MASK;
 
     log(INFO, "RPi4: Memory map: %llu MB addressable:\n",
