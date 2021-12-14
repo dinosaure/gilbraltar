@@ -1,0 +1,14 @@
+(rule
+ (target kernel8.elf)
+ (deps
+  main.c
+  ../lib/gilbraltar_rpi4.elf
+  ../lib/rpi4_link.lds)
+ (action
+  (run %{make} kernel8.elf)))
+
+(rule
+ (target kernel8.img)
+ (deps kernel8.elf)
+ (action
+  (run aarch64-linux-gnu-objcopy -O binary %{deps} %{target})))

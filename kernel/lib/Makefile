@@ -26,18 +26,6 @@ gilbraltar_rpi4.elf: boot.o $(filter-out stub.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@
 
-libnolibc.a:
-	$(error You must copy this artifact inside the current directory)
-
-kernel8.elf: $(filter-out stub.o,$(OBJ)) libnolibc.a
-	echo "void caml_startup(char **argv) { }" > caml.c
-	$(CC) $(CFLAGS) -c caml.c -o caml.o
-	$(CC) $(CFLAGS) -c boot.S -o boot.o
-	$(LD) $(LDFLAGS) boot.o $^ caml.o -L. -lnolibc -T rpi4_link.lds -o kernel8.elf
-	$(RM) caml.c
-	$(RM) caml.o
-	$(RM) boot.o
-
 gilbraltar_stub.elf: $(filter-out kernel.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@

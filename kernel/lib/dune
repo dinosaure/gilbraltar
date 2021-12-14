@@ -1,0 +1,12 @@
+(rule
+ (targets gilbraltar_rpi4.elf gilbraltar_stub.elf)
+ (deps
+  ../Makeconf
+  ../gen-headers.sh
+  ../Makeconf.sh
+  (source_tree .))
+ (action
+  (progn
+   (bash
+    "cd .. && . ./Makeconf.sh && ./gen-headers.sh ./include/$CONFIG_TARGET_TRIPLE")
+   (run %{make} gilbraltar_rpi4.elf gilbraltar_stub.elf))))

@@ -1,0 +1,17 @@
+(rule
+ (target libopenlibm.a)
+ (deps
+  (source_tree openlibm))
+ (action
+  (progn
+   (run %{make} openlibm/libopenlibm.a)
+   (copy openlibm/libopenlibm.a libopenlibm.a))))
+
+(rule
+ (target libnolibc.a)
+ (deps
+  (source_tree nolibc) openlibm/libopenlibm.a)
+ (action
+  (progn
+   (run %{make} nolibc/libnolibc.a)
+   (copy nolibc/libnolibc.a libnolibc.a))))

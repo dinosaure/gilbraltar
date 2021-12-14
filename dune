@@ -1,0 +1,5 @@
+(alias
+ (name default)
+ (deps
+  (alias_rec caml/default)
+  (alias_rec kernel/default)))
