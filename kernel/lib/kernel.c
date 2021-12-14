@@ -29,10 +29,7 @@ void _start_c() {
   irq_enable();
   log(INFO, "Interrupts: up\n");
   uart_drain_output_queue();
-  //__asm__(
-  //  "mov x0, 0\n\t"
-  //  "msr     elr_el2, x0\n\t");
-
+  
   mem_init();
   mem_lock_heap(&heap_start, &heap_size);
 
