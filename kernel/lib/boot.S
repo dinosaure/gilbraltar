@@ -1,3 +1,5 @@
+#include "sysregs.h"
+
 .macro ADR_REL register, symbol
   adrp \register, \symbol
   add  \register, \register, #:lo12:\symbol
@@ -13,6 +15,27 @@ _start:
 	mov     x2, #0
 	cmp     x1, x2
 	b.ne    .L_parking_loop
+
+
+        mov     x0, #0x33ff
+        msr     cptr_el2, x0     // Disable coprocessor traps to EL2
+        mov     x0, #3 << 20
+        msr     cpacr_el1, x0   // Enable FP/SIMD at EL1
+
+        ldr     x0, =SCTLR_VALUE_MMU_DISABLED
+        msr	sctlr_el1, x0		
+
+        ldr     x0, =HCR_VALUE
+        msr     hcr_el2, x0
+
+        ldr     x0, =SPSR_EL2_VALUE
+        msr     spsr_el2, x0
+        
+        adr     x0, .el1_entry		
+        msr     elr_el2, x0
+        eret
+
+.el1_entry:
 .L_bss_init_loop:
         ADR_REL x0, __bss_start
         ADR_REL x1, __bss_end_exclusive
@@ -34,3 +57,11 @@ _start:
 .size   _start, . - _start
 .type   _start, function
 .global _start
+
+get_el:
+	mrs x0, CurrentEL
+	lsr x0, x0, #2
+	ret
+.size   get_el, . - get_el
+.type   get_el, function
+.global get_el
