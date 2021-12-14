@@ -4,6 +4,7 @@
 #include "mem.h"
 #include "mclock.h"
 #include "crt_init.h"
+#include "interrupts.h"
 
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
@@ -24,6 +25,13 @@ void _start_c() {
   log(INFO, "|  |  | | | . |  _| .'| |  _| .'|  _|\n");
   log(INFO, "|_____|_|_|___|_| |__,|_|_| |__,|_|  \n");
   log(INFO, "EL:%d\n", get_el());
+  irq_init_vectors();
+  irq_enable();
+  log(INFO, "Interrupts: up\n");
+  uart_drain_output_queue();
+  //__asm__(
+  //  "mov x0, 0\n\t"
+  //  "msr     elr_el2, x0\n\t");
 
   mem_init();
   mem_lock_heap(&heap_start, &heap_size);

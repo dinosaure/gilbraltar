@@ -19,10 +19,10 @@ CFLAGS= -I../include/$(CONFIG_TARGET_TRIPLE) \
 	-nostartfiles
 LDFLAGS= -L. -nostdlib
 
-boot.o: boot.S
-	$(CC) $(CFLAGS) -c boot.S -o boot.o
+%.o: %.S
+	$(CC) $(CFLAGS) -c $< -o $@
 
-gilbraltar_rpi4.elf: boot.o $(filter-out stub.o,$(OBJ))
+gilbraltar_rpi4.elf: boot.o irqentry.o $(filter-out stub.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@
 
