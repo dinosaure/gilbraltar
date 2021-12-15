@@ -21,7 +21,7 @@ depexts: [
 ]
 available: [
   (arch != "arm64") &
-  (os = "linux" & os-family = "debian")
+  (os = "linux")
 ]
 synopsis: "Raspberry Pi 4 OCaml compiler"
 description:
