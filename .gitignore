@@ -14,3 +14,5 @@ kernel/lib/*.o
 kernel/lib/*.d
 kernel/lib/*.elf
 _build/
+Makeconf
+Makeconf.sh

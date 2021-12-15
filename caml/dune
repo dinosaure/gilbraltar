@@ -3,15 +3,18 @@
  (deps
   (source_tree openlibm))
  (action
-  (progn
-   (run %{make} openlibm/libopenlibm.a)
-   (copy openlibm/libopenlibm.a libopenlibm.a))))
+  (no-infer
+   (progn
+    (run %{make} openlibm/libopenlibm.a)
+    (copy openlibm/libopenlibm.a libopenlibm.a)))))
 
 (rule
  (target libnolibc.a)
  (deps
-  (source_tree nolibc) openlibm/libopenlibm.a)
+  (source_tree nolibc)
+  libopenlibm.a)
  (action
-  (progn
-   (run %{make} nolibc/libnolibc.a)
-   (copy nolibc/libnolibc.a libnolibc.a))))
+  (no-infer
+   (progn
+    (run %{make} nolibc/libnolibc.a)
+    (copy nolibc/libnolibc.a libnolibc.a)))))

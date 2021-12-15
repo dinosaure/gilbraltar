@@ -16,11 +16,10 @@ _start:
 	cmp     x1, x2
 	b.ne    .L_parking_loop
 
-
         mov     x0, #0x33ff
-        msr     cptr_el2, x0     // Disable coprocessor traps to EL2
+        msr     cptr_el2, x0  // Disable coprocessor traps to EL2
         mov     x0, #3 << 20
-        msr     cpacr_el1, x0   // Enable FP/SIMD at EL1
+        msr     cpacr_el1, x0 // Enable FP/SIMD at EL1
 
         ldr     x0, =SCTLR_VALUE_MMU_DISABLED
         msr	sctlr_el1, x0		

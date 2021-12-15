@@ -89,7 +89,7 @@ vectors:
 	ventry	error_invalid_el1t			// Error EL1t
 
 	ventry	sync_invalid_el1h			// Synchronous EL1h
-	ventry	irq_invalid_el1h				// IRQ EL1h
+	ventry	irq_invalid_el1h			// IRQ EL1h
 	ventry	fiq_invalid_el1h			// FIQ EL1h
 	ventry	error_invalid_el1h			// Error EL1h
 
@@ -102,7 +102,6 @@ vectors:
 	ventry	irq_invalid_el0_32			// IRQ 32-bit EL0
 	ventry	fiq_invalid_el0_32			// FIQ 32-bit EL0
 	ventry	error_invalid_el0_32			// Error 32-bit EL0
-
 
 sync_invalid_el1t:
 	handle_invalid_entry  SYNC_INVALID_EL1t
