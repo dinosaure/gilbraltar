@@ -19,6 +19,9 @@ CFLAGS= -I../include/$(CONFIG_TARGET_TRIPLE) \
 	-nostartfiles
 LDFLAGS= -L. -nostdlib
 
+mmu.S: mmu_map.txt
+	python3 ../../tools/arm64-pgtable-tool/generate.py -i mmu_map.txt -o mmu.S -ttb 0x2f000000 -el 1
+
 %.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
 

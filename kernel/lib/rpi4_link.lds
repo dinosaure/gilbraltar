@@ -36,7 +36,7 @@ SECTIONS
     } :segment_rx
     __got_end = .;
 
-    . = 0x00100000; /* 1M */
+    . = 0x01000000; /* 16M */
 
     __data_start = .;
     .data :

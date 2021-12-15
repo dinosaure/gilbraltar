@@ -1241,7 +1241,7 @@
  *
  * The following command line arguments were passed to arm64-pgtable-tool:
  *
- *      -i raspberry-pi-4.txt
+ *      -i mmu_map.txt
  *      -ttb 0x2f000000
  *      -el 1
  *      -tg 4K
