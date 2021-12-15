@@ -1,6 +1,9 @@
 (rule
  (target libopenlibm.a)
+ (enabled_if
+  (= %{context_name} rpi4))
  (deps
+  Makeconf
   (source_tree openlibm))
  (action
   (no-infer
@@ -10,7 +13,10 @@
 
 (rule
  (target libnolibc.a)
+ (enabled_if
+  (= %{context_name} rpi4))
  (deps
+  Makeconf
   (source_tree nolibc)
   libopenlibm.a)
  (action
@@ -18,3 +24,11 @@
    (progn
     (run %{make} nolibc/libnolibc.a)
     (copy nolibc/libnolibc.a libnolibc.a)))))
+
+(rule
+ (targets Makeconf Makeconf.sh)
+ (enabled_if
+  (= %{context_name} rpi4))
+ (action
+  (progn
+   (bash "./configure.sh"))))

@@ -1,4 +1,6 @@
 (library
+ (enabled_if
+  (= %{context_name} rpi4))
  (name oS)
  (public_name mirage-gilbraltar)
  (private_modules main time)

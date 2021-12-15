@@ -1,9 +1,6 @@
 (rule
  (target kernel8.elf)
- (deps
-  main.c
-  ../lib/gilbraltar_rpi4.elf
-  ../lib/rpi4_link.lds)
+ (deps main.c ../lib/gilbraltar_rpi4.elf ../lib/rpi4_link.lds)
  (action
   (run %{make} kernel8.elf)))
 
