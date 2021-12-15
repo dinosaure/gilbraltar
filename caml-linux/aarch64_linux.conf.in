@@ -1,0 +1,8 @@
+path(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/lib"
+destdir(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/lib"
+stdlib(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/lib/ocaml"
+ocamlopt(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/bin/ocamlopt"
+ocamlc(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/bin/ocamlc"
+ocamlmklib(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/bin/ocamlmklib"
+ocamldep(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/bin/ocamldep"
+ocamlcp(aarch64_linux) = "@@PREFIX@@/aarch64-linux-sysroot/bin/ocamlcp"
