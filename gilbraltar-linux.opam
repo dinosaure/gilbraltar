@@ -12,6 +12,7 @@ build: [
 ]
 install: ["sh" "-c" "cd caml-linux ; %{make}% install" ]
 depends: [
+  "dune" {>= "2.8.0"}
   "ocamlfind" {build}
   "ocaml-src" {build}
   "ocaml" {>= "4.08.0" & < "4.14.0"}

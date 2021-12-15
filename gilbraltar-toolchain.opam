@@ -11,7 +11,9 @@ build: [
   [ "sh" "-c" "cd kernel ; %{make}% all" ]
 ]
 install: [ "sh" "-c" "cd kernel ; %{make}% install" ]
-depends: [ ]
+depends: [
+  "dune" {>= "2.8.0"}
+]
 depexts: [
   ["linux-headers"] {os-distribution = "alpine"}
   ["kernel-headers"] {os-distribution = "fedora"}
@@ -20,7 +22,6 @@ depexts: [
   ["gcc-aarch64-linux-gnu"] {os-family = "debian"}
 ]
 available: [
-  (arch != "arm64") &
   (os = "linux")
 ]
 synopsis: "Raspberry Pi 4 OCaml compiler"
