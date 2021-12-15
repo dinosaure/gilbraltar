@@ -1,4 +1,9 @@
-include ../Makeconf
+export TOPDIR := $(abspath .)
+
+$(TOPDIR)/../Makeconf:
+	$(error Makeconf not found, please run ./configure.sh)
+
+include $(TOPDIR)/../Makeconf
 
 CC= aarch64-linux-gnu-gcc
 LD= aarch64-linux-gnu-ld
