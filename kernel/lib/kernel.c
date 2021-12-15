@@ -11,6 +11,8 @@ extern void caml_startup(char **);
 extern int get_el();
 static char* args[] = { "gi(l)braltar", NULL };
 
+extern void mmu_on();
+
 void _start_c() {
   uintptr_t heap_start;
   size_t    heap_size;
@@ -29,7 +31,11 @@ void _start_c() {
   irq_enable();
   log(INFO, "Interrupts: up\n");
   uart_drain_output_queue();
-  
+
+  mmu_on();
+  log(INFO, "MMU: ON\n");
+
+
   mem_init();
   mem_lock_heap(&heap_start, &heap_size);
 

@@ -22,7 +22,7 @@ LDFLAGS= -L. -nostdlib
 %.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
 
-gilbraltar_rpi4.elf: boot.o irqentry.o $(filter-out stub.o,$(OBJ))
+gilbraltar_rpi4.elf: boot.o irqentry.o mmu.o $(filter-out stub.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@
 

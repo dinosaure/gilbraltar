@@ -67,6 +67,7 @@
 	mov	x0, #\type
 	mrs	x1, esr_el1
 	mrs	x2, elr_el1
+	mov	x3, sp
 
     bl show_invalid_entry_message
 
