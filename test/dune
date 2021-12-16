@@ -1,15 +1,18 @@
 (executable
  (name main)
  (link_flags -g -w +A-4-41-42-44 -bin-annot -strict-sequence -principal
-  -safe-string -color always -cclib "-z rpi4-abi=rpi4"))
+   -safe-string -color always -cclib "-z rpi4-abi=rpi4"))
 
 (rule
- (enabled_if (= %{context_name} rpi4))
+ (enabled_if
+  (= %{context_name} rpi4))
  (target kernel8.elf)
  (deps main.exe)
  (mode promote)
- (action (copy main.exe kernel8.elf)))
+ (action
+  (copy main.exe kernel8.elf)))
 
 (alias
  (name default)
- (enabled_if (= %{context_name} rpi4)))
+ (enabled_if
+  (= %{context_name} rpi4)))

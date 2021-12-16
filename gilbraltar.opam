@@ -12,6 +12,7 @@ build: [
 ]
 install: ["sh" "-c" "cd caml ; %{make}% install" ]
 depends: [
+  "dune" {>= "2.8.0"}
   "ocamlfind" {build}
   "ocaml-src" {build}
   "gilbraltar-toolchain" {build}

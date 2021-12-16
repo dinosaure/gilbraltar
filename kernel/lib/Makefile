@@ -1,4 +1,9 @@
-include ../Makeconf
+export TOPDIR := $(abspath .)
+
+$(TOPDIR)/../Makeconf:
+	$(error Makeconf not found, please run ./configure.sh)
+
+include $(TOPDIR)/../Makeconf
 
 CC= aarch64-linux-gnu-gcc
 LD= aarch64-linux-gnu-ld
@@ -19,24 +24,15 @@ CFLAGS= -I../include/$(CONFIG_TARGET_TRIPLE) \
 	-nostartfiles
 LDFLAGS= -L. -nostdlib
 
-boot.o: boot.S
-	$(CC) $(CFLAGS) -c boot.S -o boot.o
+mmu.S: mmu_map.txt
+	python3 ../../tools/arm64-pgtable-tool/generate.py -i mmu_map.txt -o mmu.S -ttb 0x2f000000 -el 1
 
-gilbraltar_rpi4.elf: boot.o $(filter-out stub.o,$(OBJ))
+%.o: %.S
+	$(CC) $(CFLAGS) -c $< -o $@
+
+gilbraltar_rpi4.elf: boot.o irqentry.o mmu.o $(filter-out stub.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@
-
-libnolibc.a:
-	$(error You must copy this artifact inside the current directory)
-
-kernel8.elf: $(filter-out stub.o,$(OBJ)) libnolibc.a
-	echo "void caml_startup(char **argv) { }" > caml.c
-	$(CC) $(CFLAGS) -c caml.c -o caml.o
-	$(CC) $(CFLAGS) -c boot.S -o boot.o
-	$(LD) $(LDFLAGS) boot.o $^ caml.o -L. -lnolibc -T rpi4_link.lds -o kernel8.elf
-	$(RM) caml.c
-	$(RM) caml.o
-	$(RM) boot.o
 
 gilbraltar_stub.elf: $(filter-out kernel.o,$(OBJ))
 	@echo "LD $@"

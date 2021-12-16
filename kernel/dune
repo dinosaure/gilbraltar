@@ -1,0 +1,6 @@
+(rule
+ (targets Makeconf Makeconf.sh)
+ (deps configure.sh)
+ (action
+  (progn
+   (bash "./configure.sh"))))

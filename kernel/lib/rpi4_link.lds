@@ -36,6 +36,8 @@ SECTIONS
     } :segment_rx
     __got_end = .;
 
+    . = 0x01000000; /* 16M */
+
     __data_start = .;
     .data :
     {
@@ -52,5 +54,5 @@ SECTIONS
     } :NONE
 
     __end = .;
-    __boot_core_stack_end_exclusive = 0x30000000;
+    __boot_core_stack_end_exclusive = 0x2f000000;
 }

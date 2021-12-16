@@ -1,0 +1,9 @@
+(alias
+ (name check)
+ (deps
+  (alias_rec kernel/default)))
+
+(alias
+ (name compiler)
+ (deps
+  (alias_rec caml/default)))

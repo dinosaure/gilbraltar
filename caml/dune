@@ -1,0 +1,28 @@
+(rule
+ (target libopenlibm.a)
+ (deps
+  Makeconf
+  (source_tree openlibm))
+ (action
+  (no-infer
+   (progn
+    (run %{make} openlibm/libopenlibm.a)
+    (copy openlibm/libopenlibm.a libopenlibm.a)))))
+
+(rule
+ (target libnolibc.a)
+ (deps
+  Makeconf
+  (source_tree nolibc)
+  libopenlibm.a)
+ (action
+  (no-infer
+   (progn
+    (run %{make} nolibc/libnolibc.a)
+    (copy nolibc/libnolibc.a libnolibc.a)))))
+
+(rule
+ (targets Makeconf)
+ (action
+  (progn
+   (bash "./configure.sh"))))

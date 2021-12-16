@@ -1,0 +1,3 @@
+[submodule "tools/arm64-pgtable-tool"]
+	path = tools/arm64-pgtable-tool
+	url = https://github.com/TheLortex/arm64-pgtable-tool
