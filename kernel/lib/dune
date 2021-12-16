@@ -3,9 +3,8 @@
  (deps
   ../Makeconf
   ../Makeconf.sh
-  ../gen-headers.sh
-  (source_tree ../../tools/arm64-pgtable-tool/)
-  (source_tree .))
+  (source_tree .)
+  (source_tree ../../tools/arm64-pgtable-tool/))
  (action
   (progn
    (bash
