@@ -6,4 +6,5 @@
  (default
   (name rpi4)
   (toolchain rpi4)
+  (merlin)
   (host default)))

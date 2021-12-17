@@ -1,7 +1,8 @@
 (executable
  (name main)
  (link_flags -g -w +A-4-41-42-44 -bin-annot -strict-sequence -principal
-   -safe-string -color always -cclib "-z rpi4-abi=rpi4"))
+  -safe-string -color always -cclib "-z rpi4-abi=rpi4")
+ (foreign_stubs (language c) (names main)))
 
 (rule
  (enabled_if
@@ -11,6 +12,13 @@
  (mode promote)
  (action
   (copy main.exe kernel8.elf)))
+
+(rule
+ (target kernel8.img)
+ (deps kernel8.elf)
+ (mode promote)
+ (action
+  (run aarch64-linux-gnu-objcopy -O binary %{deps} %{target})))
 
 (alias
  (name default)
