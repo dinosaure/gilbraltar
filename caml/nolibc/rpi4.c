@@ -12,6 +12,7 @@ extern void uart_puts(const char *buffer, size_t len); // TODO: add into rpi4.h
 extern void uart_puts_actual(const char *buffer, size_t len); // TODO: add into rpi4.h
 extern void uart_drain_output_queue(void); // TODO: add into rpi4.h
 
+extern void signal_init();
 /*
  * Global errno lives in this module.
  */
@@ -102,6 +103,8 @@ void _nolibc_init(uintptr_t heap_start, size_t heap_size)
 
     sbrk_start = sbrk_cur = heap_start;
     sbrk_end = heap_start + heap_size;
+
+    signal_init();
 }
 
 /*
