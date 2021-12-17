@@ -2,23 +2,25 @@
  (target libopenlibm.a)
  (deps
   Makeconf
+  Makefile
   (source_tree openlibm))
  (action
   (no-infer
    (progn
-    (run %{make} openlibm/libopenlibm.a)
+    (run %{make} -j8 openlibm/libopenlibm.a)
     (copy openlibm/libopenlibm.a libopenlibm.a)))))
 
 (rule
  (target libnolibc.a)
  (deps
   Makeconf
+  Makefile
   (source_tree nolibc)
   libopenlibm.a)
  (action
   (no-infer
    (progn
-    (run %{make} nolibc/libnolibc.a)
+    (run %{make} -j8 nolibc/libnolibc.a)
     (copy nolibc/libnolibc.a libnolibc.a)))))
 
 (rule
