@@ -69,11 +69,11 @@ void signal_handler() {
 }
 
 // defined in kernel/interrupts.c
-void register_interrupt_handler(void (*fn)());
+void irq_register_handler(void (*fn)());
 void irq_enable();
 
 void signal_init() {
-    register_interrupt_handler(signal_handler);
+    irq_register_handler(signal_handler);
     irq_enable();
 
     for (int i = 0; i < 64; i++){

@@ -13,8 +13,8 @@ void show_invalid_entry_message(int type, int esr_el1, int elr_el1, int sp) {
 
 void (*interrupt_handler)() = NULL;
 
-void register_interrupt_handler(void (* v_interrupt_handler)()) {
-    interrupt_handler = v_interrupt_handler;
+void irq_register_handler(void (* v)()) {
+    interrupt_handler = v;
 }
 
 void interrupt_handle_el1_irq() {
@@ -25,7 +25,7 @@ void interrupt_handle_el1_irq() {
     }
 }
 
-void yield() {
+void irq_yield() {
     irq_enable();
     __asm__("wfi");
 }
