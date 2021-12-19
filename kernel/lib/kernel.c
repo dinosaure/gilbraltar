@@ -28,13 +28,11 @@ void _start_c() {
   log(INFO, "|_____|_|_|___|_| |__,|_|_| |__,|_|  \n");
   log(INFO, "EL:%d\n", get_el());
   irq_init_vectors();
-  irq_enable();
   log(INFO, "Interrupts: up\n");
   uart_drain_output_queue();
 
   mmu_on();
   log(INFO, "MMU: ON\n");
-
 
   mem_init();
   mem_lock_heap(&heap_start, &heap_size);
@@ -43,6 +41,7 @@ void _start_c() {
   uart_drain_output_queue();
 
   caml_startup(args);
-
-  for(;;);
+  for(;;){
+    __asm__("wfi");
+  };
 }

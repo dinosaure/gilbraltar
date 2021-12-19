@@ -2,6 +2,7 @@
  (target libopenlibm.a)
  (deps
   Makeconf
+  Makefile
   (source_tree openlibm))
  (action
   (no-infer
@@ -13,6 +14,7 @@
  (target libnolibc.a)
  (deps
   Makeconf
+  Makefile
   (source_tree nolibc)
   libopenlibm.a)
  (action
