@@ -7,7 +7,7 @@
  (action
   (no-infer
    (progn
-    (run %{make} -j8 openlibm/libopenlibm.a)
+    (run %{make} openlibm/libopenlibm.a)
     (copy openlibm/libopenlibm.a libopenlibm.a)))))
 
 (rule
@@ -20,7 +20,7 @@
  (action
   (no-infer
    (progn
-    (run %{make} -j8 nolibc/libnolibc.a)
+    (run %{make} nolibc/libnolibc.a)
     (copy nolibc/libnolibc.a libnolibc.a)))))
 
 (rule

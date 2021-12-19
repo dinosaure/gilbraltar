@@ -23,7 +23,6 @@ _start:
         msr     cntfrq_el0, x0
         msr     cntvoff_el2, xzr
 
-
         mrs     x1, MPIDR_EL1
         and     x1, x1, _core_id_mask
 	mov     x2, #0

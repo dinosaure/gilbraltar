@@ -56,15 +56,11 @@ void signal_handler() {
     unsigned int pending_1 = REGS_IRQ->irq0_pending_1 & ((int)( handlers >> 32));
 
     for (int i = 0; i < 32; i++) {
-        if (pending_0 & (1 << i)) {
-            fflush(stdout);
+        if (pending_0 & (1 << i))
             (*fn_handlers[i])(i);
-        }
 
-        if (pending_1 & (1 << i)) {
-            fflush(stdout);
+        if (pending_1 & (1 << i))
             (*fn_handlers[32+i])(32+i);
-        }
     }
 }
 
