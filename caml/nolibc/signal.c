@@ -1,6 +1,5 @@
 #include "signal.h"
 
-
 struct arm_irq_regs_2711 {
     volatile unsigned int irq0_pending_0;
     volatile unsigned int irq0_pending_1;
@@ -23,16 +22,12 @@ typedef struct arm_irq_regs_2711 arm_irq_regs;
 long handlers = 0;
 sig_handler fn_handlers[64];
 
-
 #include <stdio.h>
 
-
-sig_handler signal(int sig, sig_handler func){
+sig_handler signal(int sig, sig_handler func) {
     if (sig < 0 ||sig >= 64) {
         return SIG_ERR;
     }
-
-    printf("Registering sig %d to %2x\n", sig, func);
 
     if (func == SIG_IGN ||func == SIG_DFL) {
         handlers &= ~(1<<sig);
@@ -57,10 +52,6 @@ sig_handler signal(int sig, sig_handler func){
 
 
 void signal_handler() {
-
-    printf("Got interrupt. %08x (%08x) :: %08x\n", REGS_IRQ->irq0_pending_0, REGS_IRQ->irq0_enable_0, handlers);
-    fflush(stdout);
-    
     unsigned int pending_0 = REGS_IRQ->irq0_pending_0 & ((int) handlers);
     unsigned int pending_1 = REGS_IRQ->irq0_pending_1 & ((int)( handlers >> 32));
 

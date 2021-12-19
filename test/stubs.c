@@ -12,20 +12,15 @@ struct timer_regs {
 
 #define REGS_TIMER ((struct timer_regs *)(PERIPHERAL_BASE + 0x00003000))
 
-
 void caml_setup_handler_1() {
     unsigned int timer1_val = REGS_TIMER->counter_lo;
-    printf("1: %d", timer1_val);
     timer1_val += 2000000;
-    printf("1 => %d\n", timer1_val);
     REGS_TIMER->compare[1] = timer1_val;
 }
 
 void caml_setup_handler_3() {
     unsigned int timer1_val = REGS_TIMER->counter_lo;
-    printf("3: %d", timer1_val);
     timer1_val += 2500000;
-    printf("3 => %d\n", timer1_val);
     REGS_TIMER->compare[3] = timer1_val;
 }
 

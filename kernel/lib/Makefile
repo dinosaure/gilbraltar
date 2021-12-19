@@ -5,9 +5,9 @@ $(TOPDIR)/../Makeconf:
 
 include $(TOPDIR)/../Makeconf
 
-CC= aarch64-none-elf-gcc
-LD= aarch64-none-elf-ld
-OBJCOPY= aarch64-none-elf-objcopy
+CC= aarch64-linux-gnu-gcc
+LD= aarch64-linux-gnu-ld
+OBJCOPY= aarch64-linux-gnu-objcopy
 
 SRC= $(wildcard *.c)
 OBJ= $(SRC:.c=.o)

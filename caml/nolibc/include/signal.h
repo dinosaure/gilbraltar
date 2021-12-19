@@ -1,12 +1,10 @@
 #ifndef _SIGNAL_H
 #define _SIGNAL_H
 
-
 #include <stddef.h>
 
 typedef int jmp_buf;
 int setjmp(jmp_buf);
-
 
 typedef void (*sig_handler)(int);
 sig_handler signal(int sig, sig_handler func);

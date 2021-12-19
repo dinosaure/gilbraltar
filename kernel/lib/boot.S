@@ -30,17 +30,15 @@ _start:
 	cmp     x1, x2
 	b.ne    .L_parking_loop
 
-
-
         mov     x0, #0x33ff
-        msr     cptr_el3, x0 	 // Disable coprocessor traps to EL3
+        msr     cptr_el3, x0 	     // Disable coprocessor traps to EL3
         mov     x0, #3 << 20
-        msr     cpacr_el1, x0	 // Enable FP/SIMD at EL1
+        msr     cpacr_el1, x0	     // Enable FP/SIMD at EL1
 
         // Now get ready to switch from EL3 down to EL1
 
         ldr     x0, =SCTLR_VALUE_MMU_DISABLED
-        msr	    sctlr_el1, x0		
+        msr	sctlr_el1, x0		
 
         ldr     x0, =HCR_VALUE
         msr     hcr_el2, x0

@@ -7,9 +7,9 @@ all:	openlibm/libopenlibm.a nolibc/libnolibc.a ocaml rpi4.conf
 TOP=$(abspath .)
 
 # CFLAGS used to build nolibc / openlibm / ocaml runtime
-LOCAL_CFLAGS=$(MAKECONF_CFLAGS) -I$(TOP)/nolibc/include -include freestanding/overrides.h
+LOCAL_CFLAGS=$(MAKECONF_CFLAGS) -I$(TOP)/nolibc/include -include _freestanding/overrides.h
 # CFLAGS used by the OCaml compiler to build C stubs
-GLOBAL_CFLAGS=$(MAKECONF_CFLAGS) -I$(MAKECONF_PREFIX)/rpi4-sysroot/include/nolibc/ -include freestanding/overrides.h
+GLOBAL_CFLAGS=$(MAKECONF_CFLAGS) -I$(MAKECONF_PREFIX)/rpi4-sysroot/include/nolibc/ -include _freestanding/overrides.h
 # LIBS used by the OCaml compiler to link executables
 GLOBAL_LIBS=-L$(MAKECONF_PREFIX)/rpi4-sysroot/lib/nolibc/ -lnolibc -lopenlibm $(MAKECONF_EXTRA_LIBS)
 
