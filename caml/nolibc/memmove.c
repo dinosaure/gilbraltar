@@ -15,5 +15,5 @@ void *memmove(void *v_dst, const void *v_src, size_t len)
   else
     while (len) len--, dst[len] = src[len];
 
-  return dst;
+  return v_dst;
 }
