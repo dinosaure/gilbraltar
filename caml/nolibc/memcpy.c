@@ -8,5 +8,5 @@ void *memcpy(void *v_dst, const void *v_src, size_t len)
   const char *src = v_src;
 
   for (; len; len--) *dst++ = *src++;
-  return dst;
+  return v_dst;
 }
