@@ -15,11 +15,6 @@ die()
     exit 1
 }
 
-warn()
-{
-    echo "${prog_NAME}: WARNING: $@" 1>&2
-}
-
 usage()
 {
     cat <<EOM 1>&2
@@ -66,8 +61,6 @@ done
 
 [ -z "${CONFIG_TARGET}" ] && die "The --target option needs to be specified."
 
-ocamlfind query ocaml-src >/dev/null || exit 1
-
 MAKECONF_CFLAGS=""
 MAKECONF_CC="$CONFIG_TARGET-cc"
 MAKECONF_LD="$CONFIG_TARGET-ld"
@@ -88,8 +81,7 @@ case "${BUILD_TRIPLET}" in
         OCAML_BUILD_ARCH="arm64"
         ;;
     *)
-        echo "ERROR: Unsupported architecture: ${BUILD_TRIPLET}" 1>&2
-        exit 1
+        die "Unsupported architecture: ${BUILD_TRIPLET}"
         ;;
 esac
 

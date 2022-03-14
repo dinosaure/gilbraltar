@@ -27,7 +27,12 @@ openlibm/libopenlibm.a:
 
 # OCAML
 ocaml/Makefile:
-	cp -r `ocamlfind query ocaml-src` ./ocaml
+	cp -r `opam var prefix`/lib/ocaml-src ./ocaml
+
+OC_CFLAGS=$(LOCAL_CFLAGS) -I$(TOP)/openlibm/include -I$(TOP)/openlibm/src -nostdlib
+OC_LIBS=-L$(TOP)/nolibc -lnolibc -L$(TOP)/openlibm -lopenlibm -nostdlib $(MAKECONF_EXTRA_LIBS)
+
+ocaml/Makefile.config: ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
 # configure: Do not build dynlink
 	sed -i -e 's/otherlibraries="dynlink"/otherlibraries=""/g' ocaml/configure
 # configure: Allow precise input of flags and libs
@@ -66,13 +71,10 @@ ocaml/Makefile:
 # - We use LIBS with a stubbed out solo5 implementation to override the OCaml 
 # 	configure link test
 # - We override OCAML_OS_TYPE since configure just hardcodes it to "Unix".
-# - We override HAS_SOCKETS because of a bug in the ocaml configure script that
-# 	always enables sockets.
-OC_CFLAGS=$(LOCAL_CFLAGS) -I$(TOP)/openlibm/include -I$(TOP)/openlibm/src -nostdlib
-OC_LIBS=-L$(TOP)/nolibc -lnolibc -L$(TOP)/openlibm -lopenlibm -nostdlib $(MAKECONF_EXTRA_LIBS)
-ocaml/Makefile.config: ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
 	cd ocaml && \
 		CC="$(MAKECONF_CC)" \
+		LDFLAGS="$(OCAML_LDFLAGS)" \
+		LIBS="-lopenlibm" \
 		OC_CFLAGS="$(OC_CFLAGS)" \
 		OCAMLC_CFLAGS="$(GLOBAL_CFLAGS)" \
 		AS="$(MAKECONF_AS)" \
@@ -82,6 +84,7 @@ ocaml/Makefile.config: ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
 		GLOBAL_LIBS="$(GLOBAL_LIBS)"\
 		LD="$(MAKECONF_LD)" \
 		ac_cv_prog_DIRECT_LD="$(MAKECONF_LD)" \
+	        ac_cv_lib_m_cos="no" \
 	  ./configure \
 		-host=$(MAKECONF_BUILD_ARCH)-unknown-none \
 		-prefix $(MAKECONF_PREFIX)/rpi4-sysroot \
@@ -94,16 +97,18 @@ ocaml/Makefile.config: ocaml/Makefile openlibm/libopenlibm.a nolibc/libnolibc.a
 	echo 'SAK_CC=cc' >> ocaml/Makefile.config
 	echo 'SAK_CFLAGS=' >> ocaml/Makefile.config
 	echo 'SAK_LINK=cc $(SAK_CFLAGS) $$(OUTPUTEXE)$$(1) $$(2)' >> ocaml/Makefile.config
-	echo '#undef HAS_SOCKETS' >> ocaml/runtime/caml/s.h
 	echo '#undef OCAML_OS_TYPE' >> ocaml/runtime/caml/s.h
 	echo '#define OCAML_OS_TYPE "None"' >> ocaml/runtime/caml/s.h
 
+# NOTE: ocaml/tools/make-version-header.sh is integrated into OCaml's
+# ./configure script starting from OCaml 4.14
+ifneq (,$(wildcard ocaml/tools/make-version-header.sh))
 ocaml/runtime/caml/version.h: ocaml/Makefile.config
 	ocaml/tools/make-version-header.sh > $@
-
-CAMLOPT:=$(shell which ocamlopt)
-CAMLRUN:=$(shell which ocamlrun)
-CAMLC:=$(shell which ocamlc)
+else
+ocaml/runtime/caml/version.h: ocaml/Makefile.config
+	@
+endif
 
 ocaml: ocaml/Makefile.config ocaml/runtime/caml/version.h
 	$(MAKE) -C ocaml world
