@@ -19,7 +19,7 @@ typedef struct arm_irq_regs_2711 arm_irq_regs;
 #define PERIPHERAL_BASE 0xFE000000
 #define REGS_IRQ ((arm_irq_regs *)(PERIPHERAL_BASE + 0x0000B200))
 
-long handlers = 0;
+long long handlers = 0;
 sig_handler fn_handlers[64];
 
 #include <stdio.h>
@@ -30,14 +30,14 @@ sig_handler signal(int sig, sig_handler func) {
     }
 
     if (func == SIG_IGN ||func == SIG_DFL) {
-        handlers &= ~(1<<sig);
+        handlers &= ~(1L << sig);
         if (sig <= 32){
             REGS_IRQ->irq0_disable_0 = 1 << sig;
         } else {
             REGS_IRQ->irq0_disable_1 = 1 << (sig - 32);
         }
     } else {
-        handlers |= (1<<sig);
+        handlers |= (1L << sig);
         if (sig <= 32){
             REGS_IRQ->irq0_enable_0 = 1 << sig;
         } else {
