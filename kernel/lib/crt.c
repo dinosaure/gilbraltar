@@ -40,6 +40,6 @@ stack_chk_fail_message[] = "RPi4: ABORT: Stack corruption detected\n";
 __attribute__((noreturn))
 void SSP_FAIL_SYMBOL(void)
 {
-    uart_puts(stack_chk_fail_message, sizeof stack_chk_fail_message);
+    uart_puts_actual(stack_chk_fail_message, sizeof stack_chk_fail_message);
     for(;;);
 }

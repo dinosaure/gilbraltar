@@ -9,7 +9,7 @@ TOP=$(abspath .)
 
 # OCAML
 ocaml/Makefile:
-	cp -r `ocamlfind query ocaml-src` ./ocaml
+	cp -r `opam var prefix`/lib/ocaml-src ./ocaml
 # Makefile: Disable build of ocamltest (for 4.10)
 	sed -i -e 's/$$(MAKE) -C ocamltest all//g' ocaml/Makefile
 # runtime/Makefile: Runtime rules: don't build libcamlrun.a and import ocamlrun from the system
@@ -65,8 +65,15 @@ ocaml/Makefile.config: ocaml/Makefile
 	echo 'SAK_CFLAGS=' >> ocaml/Makefile.config
 	echo 'SAK_LINK=cc $(SAK_CFLAGS) $$(OUTPUTEXE)$$(1) $$(2)' >> ocaml/Makefile.config
 
+# NOTE: ocaml/tools/make-version-header.sh is integrated into OCaml's
+# ./configure script starting from OCaml 4.14
+ifneq (,$(wildcard ocaml/tools/make-version-header.sh))
 ocaml/runtime/caml/version.h: ocaml/Makefile.config
 	ocaml/tools/make-version-header.sh > $@
+else
+ocaml/runtime/caml/version.h: ocaml/Makefile.config
+	@
+endif
 
 CAMLOPT:=$(shell which ocamlopt)
 CAMLRUN:=$(shell which ocamlrun)

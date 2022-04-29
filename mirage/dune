@@ -1,10 +1,28 @@
 (library
- (enabled_if
-  (= %{context_name} rpi4))
  (name oS)
  (public_name mirage-gilbraltar)
- (private_modules main time)
- (foreign_stubs
-  (language c)
-  (names yield))
+ (private_modules main time interrupts)
+ (no_dynlink)
+ (foreign_archives mirage-gilbraltar_bindings)
  (libraries mirage-runtime bheap lwt cstruct duration))
+
+(rule
+ (target libmirage-gilbraltar_bindings.a)
+ (deps
+  (:dep libmirage-gilbraltar_bindings.%{context_name}.a))
+ (action
+  (copy %{dep} %{target})))
+
+(rule
+ (enabled_if
+  (= %{context_name} rpi4))
+ (target libmirage-gilbraltar_bindings.rpi4.a)
+ (action
+  (copy bindings/libmirage-gilbraltar_bindings.a %{target})))
+
+(rule
+ (target libmirage-gilbraltar_bindings.default.a)
+ (action
+  (copy stub/libmirage-gilbraltar_bindings.a %{target})))
+
+(include_subdirs unqualified)

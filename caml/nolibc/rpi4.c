@@ -8,9 +8,10 @@
 
 #include <rpi4.h>
 
-extern void uart_puts(const char *buffer, size_t len); // TODO: add into rpi4.h
-extern void uart_puts_actual(const char *buffer, size_t len); // TODO: add into rpi4.h
-extern void uart_drain_output_queue(void); // TODO: add into rpi4.h
+// TODO(dinosaure): add these functions into [rpi4.h].
+extern void uart_puts(const char *buffer, size_t len);
+extern void uart_puts_actual(const char *buffer, size_t len);
+extern void uart_drain_output_queue(void);
 
 extern void signal_init();
 /*
@@ -63,7 +64,7 @@ void abort(void)
 int gettimeofday(struct timeval *tv, struct timezone *tz)
 {
     if (tv != NULL) {
-        uint64_t now = mclock();
+        uint64_t now = tscclock_monotonic();
         tv->tv_sec = now / NSEC_PER_SEC;
         tv->tv_usec = (now % NSEC_PER_SEC) / 1000ULL;
     }
@@ -76,7 +77,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 clock_t times(struct tms *buf)
 {
     memset(buf, 0, sizeof(*buf));
-    return (clock_t)mclock();
+    return (clock_t)tscclock_monotonic();
 }
 
 static uintptr_t sbrk_start;
