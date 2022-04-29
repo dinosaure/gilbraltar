@@ -8,9 +8,10 @@
 
 #include <rpi4.h>
 
-extern void uart_puts(const char *buffer, size_t len); // TODO: add into rpi4.h
-extern void uart_puts_actual(const char *buffer, size_t len); // TODO: add into rpi4.h
-extern void uart_drain_output_queue(void); // TODO: add into rpi4.h
+// TODO(dinosaure): add these functions into [rpi4.h].
+extern void uart_puts(const char *buffer, size_t len);
+extern void uart_puts_actual(const char *buffer, size_t len);
+extern void uart_drain_output_queue(void);
 
 extern void signal_init();
 /*
