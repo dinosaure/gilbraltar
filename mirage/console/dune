@@ -1,9 +1,0 @@
-(library
- (enabled_if
-  (= %{context_name} rpi4))
- (name console_gilbraltar)
- (public_name mirage-console-gilbraltar)
- (foreign_stubs
-  (language c)
-  (names console))
- (libraries mirage-gilbraltar mirage-console bigstringaf cstruct lwt ke))
