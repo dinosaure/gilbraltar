@@ -1,0 +1,10 @@
+(rule
+ (enabled_if
+  (= %{context_name} rpi4))
+ (deps
+  (source_tree .))
+ (targets libmirage-gilbraltar_bindings.a)
+ (action
+  (no-infer
+   (progn
+    (run %{make})))))

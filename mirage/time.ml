@@ -26,8 +26,6 @@
 
 open Lwt.Infix
 
-external now : unit -> (int64[@unboxed]) = "bytecode_unavailable" "mclock" [@@noalloc]
-
 type t = int64
 
 type sleep =
@@ -43,6 +41,13 @@ end
 
 module SleepQueue = Binary_heap.Make (Sleeper)
 
+external now
+  : unit -> (int64[@unboxed])
+  = "gilbraltar_elapsed_us"
+    "gilbraltar_elapsed_us_unboxed" [@@noalloc]
+(* TODO(dinosaure): again, here we use BCM2711 system timer but
+ * the accurrency of it is may be worse than [cntpct_el0]. *)
+
 let sleep_queue =
   let dummy =
     { time = now ()
@@ -52,7 +57,7 @@ let sleep_queue =
 
 let new_sleeps = ref []
 
-let sleep_ns d =
+let sleep_us d =
   let (res, w) = Lwt.task () in
   let t = Int64.add (now ()) d in
   let sleeper = { time = t; canceled = false; thread = w } in
@@ -62,7 +67,7 @@ let sleep_ns d =
 
 exception Timeout
 
-let timeout d = sleep_ns d >>= fun () -> Lwt.fail Timeout
+let timeout d = sleep_us d >>= fun () -> Lwt.fail Timeout
 
 let with_timeout d f = Lwt.pick [timeout d; Lwt.apply f ()]
 
