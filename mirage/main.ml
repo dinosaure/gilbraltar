@@ -4,6 +4,7 @@
  * Copyright (C) 2009 Jérémie Dimino
  * Copyright (C) 2010 Anil Madhavapeddy <anil@recoil.org>
  * Copyright (C) 2021 Romain Calascibetta <romain.calascibetta@gmail.com>
+ * Copyright (C) 2022 Lucas Pluvinage
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -22,55 +23,44 @@
  * 02111-1307, USA.
  *)
 
-external yield
-  : (Time.t[@unboxed]) -> (int64[@unboxed])
-  = "bytecode_unavailable" "gilbraltar_yield"
-  [@@noalloc]
+external wait_for_interrupt : unit -> unit = "wfi"
+(* TODO(dinosaure): check that! *)
 
-module Handle = struct
-  type t = int
+let do_something_useless () = ignore @@ Bytes.create 1
+(* XXX(dinosaure): just to be sure that signals are properly
+ * handled by the caml runtime. *)
 
-  let compare a b = compare a b
-end
-
-module HandleMap = Map.Make(Handle)
-
-let work = ref HandleMap.empty
-
-let wait_for_work_on_handle h =
-  match HandleMap.find h !work with
-  | exception Not_found ->
-    let cond = Lwt_condition.create () in
-    work := HandleMap.add h cond !work;
-    Lwt_condition.wait cond
-  | cond ->
-    Lwt_condition.wait cond
-
-let rec run t = go t
-and go t =
+let rec go t =
   Lwt.wakeup_paused ();
   Time.restart_threads Time.now ;
   match Lwt.poll t with
   | Some () -> ()
   | None ->
-    Mirage_runtime.run_enter_iter_hooks () ;
+    Mirage_runtime.run_enter_iter_hooks () ; (* TODO(dinosaure): before or after [Lwt.poll]? *)
     let timeout = match Time.select_next () with
-      | None -> Int64.add (Time.now ()) (Duration.of_day 1)
+      | None -> Int64.add (Interrupts.elapsed_us ()) (Duration.of_day 1)
       | Some tm -> tm in
-    let ready_set = yield timeout in
-    begin match ready_set with
-    | 0L -> ()
-    | ready_set ->
-      let is_in_set set x = 0L <> Int64.(logand set (shift_left 1L x)) in
-      let run k v =
-        if is_in_set ready_set k
-        then Lwt_condition.broadcast v () in
-      HandleMap.iter run !work
-    end ;
+    Interrupts.(schedule L1) timeout ;
+    wait_for_interrupt () ;
+    do_something_useless () ;
     Mirage_runtime.run_leave_iter_hooks () ;
     go t
+
+external irq_enable : unit -> unit = "irq_enable"
+(* XXX(dinosaure): provided by the gi(l)braltar kernel. We should check what we emit! *)
+
+let timer_interrupt_handler _ =
+  Interrupts.acknowledge L1 ;
+  Mem.dmb () ;
+  irq_enable () ;
+;;
+
+let run t =
+  Sys.set_signal Interrupts.(line_to_signal_number L1)
+    (Sys.Signal_handle timer_interrupt_handler) ;
+  go t
 
 let () =
   at_exit @@ fun () ->
   Lwt.abandon_wakeups () ;
-  run (Mirage_runtime.run_exit_hooks ())
+  go (Mirage_runtime.run_exit_hooks ())
