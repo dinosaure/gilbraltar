@@ -1,3 +1,5 @@
+#include <stdint.h>
+#include <stddef.h>
 
 typedef enum {
   ERROR=0,
@@ -13,27 +15,30 @@ int log(log_level_t level, const char *fmt, ...)
 void _nolibc_init() {
 
 }
-void uart_drain_output_queue();
-long tscclock_monotonic(void);
 
-void caml_startup(){
-    const char[] title = "Gi(l)braltar benchmark.\n" ;
-    uart_puts(title, strlen(title));
-    uart_drain_output_queue();
+extern void uart_drain_output_queue(void);
+extern void uart_puts(const char *, size_t);
+extern uint64_t tscclock_monotonic(void);
+extern size_t strlen(const char *);
 
-    long clock = tscclock_monotonic();
+void caml_startup() {
+  const char title[] = "Gi(l)braltar benchmark.\n" ;
+  uart_puts(title, strlen(title));
+  uart_drain_output_queue();
 
-    int data[0x1000000];
+  long clock = tscclock_monotonic();
 
-    for (int i = 0; i < 0x1000000; i++)
-        data[i] = i;
+  int data[0x1000000];
 
-    int sum = 0;
+  for (int i = 0; i < 0x1000000; i++)
+      data[i] = i;
 
-    for (int i = 0; i < 0x1000000; i++)
-        if (i % 10000 == 0)
-            sum += data[i];
+  int sum = 0;
 
-    log(INFO, "> %ld ms.\n", ((tscclock_monotonic() - clock)) / 1000000);
-    uart_drain_output_queue();
+  for (int i = 0; i < 0x1000000; i++)
+      if (i % 10000 == 0)
+          sum += data[i];
+
+  log(INFO, "> %ld ms.\n", ((tscclock_monotonic() - clock)) / 1000000);
+  uart_drain_output_queue();
 }
