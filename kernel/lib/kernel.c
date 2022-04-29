@@ -2,10 +2,10 @@
 #include "lib.h"
 #include "log.h"
 #include "mem.h"
-#include "mclock.h"
 #include "crt_init.h"
 #include "interrupts.h"
 
+extern int tscclock_init(uint64_t tsc_freq);
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
 extern int get_el();
@@ -20,7 +20,7 @@ void _start_c() {
   crt_init_ssp();
 
   uart_init();
-  mclock_init();
+  tscclock_init(-1);
 
   log(INFO, " _____ _ _ _           _ _           \n");
   log(INFO, "|   __|_| | |_ ___ ___| | |_ ___ ___ \n");
