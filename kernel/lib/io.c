@@ -5,7 +5,7 @@
 // GPIO
 
 enum {
-    PERIPHERAL_BASE = 0xFE000000,
+    PERIPHERAL_BASE = 0xFE000000, // RPi4 only
     GPFSEL0         = PERIPHERAL_BASE + 0x200000,
     GPSET0          = PERIPHERAL_BASE + 0x20001C,
     GPCLR0          = PERIPHERAL_BASE + 0x200028,
@@ -148,13 +148,6 @@ void uart_write_byte_blocking(unsigned char ch) {
     uart_output_queue_write = next;
 }
 
-void uart_write_text(char *buffer) {
-    while (*buffer) {
-       if (*buffer == '\n') uart_write_byte_blocking('\r');
-       uart_write_byte_blocking(*buffer++);
-    }
-}
-
 void uart_puts(const char *buffer, size_t len) {
   while (len--) {
        if (*buffer == '\n') uart_write_byte_blocking('\r');
@@ -171,13 +164,4 @@ void uart_puts_actual(const char *buffer, size_t len) {
 
 void uart_drain_output_queue() {
     while (!uart_is_output_queue_empty()) uart_load_output_fifo();
-}
-
-void uart_update() {
-    uart_load_output_fifo();
-
-    if (uart_is_read_byte_ready()) {
-       unsigned char ch = uart_read_byte();
-       if (ch == '\r') uart_write_text("\n"); else uart_write_byte_blocking(ch);
-    }
 }

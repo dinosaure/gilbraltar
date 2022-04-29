@@ -8,7 +8,6 @@
 extern int tscclock_init(uint64_t tsc_freq);
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
-extern int get_el();
 static char* args[] = { "gi(l)braltar", NULL };
 
 extern void mmu_on();
@@ -26,13 +25,10 @@ void _start_c() {
   log(INFO, "|   __|_| | |_ ___ ___| | |_ ___ ___ \n");
   log(INFO, "|  |  | | | . |  _| .'| |  _| .'|  _|\n");
   log(INFO, "|_____|_|_|___|_| |__,|_|_| |__,|_|  \n");
-  log(INFO, "EL:%d\n", get_el());
   irq_init_vectors();
-  log(INFO, "Interrupts: up\n");
   uart_drain_output_queue();
 
   mmu_on();
-  log(INFO, "MMU: ON\n");
 
   mem_init();
   mem_lock_heap(&heap_start, &heap_size);
@@ -41,6 +37,7 @@ void _start_c() {
   uart_drain_output_queue();
 
   caml_startup(args);
+
   for(;;){
     __asm__("wfi");
   };
