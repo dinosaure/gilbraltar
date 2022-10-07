@@ -19,6 +19,7 @@ CFLAGS= -I../include/$(CONFIG_TARGET_TRIPLE) \
 	-DPRINTF_INCLUDE_CONFIG_H \
 	-DSSP_GUARD_SYMBOL=__stack_chk_guard \
 	-DSSP_FAIL_SYMBOL=__stack_chk_fail \
+	-mstrict-align \
 	-std=c11 \
 	-ffreestanding -fstack-protector-strong -nostdinc -nostdlib \
 	-nostartfiles
