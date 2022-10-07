@@ -99,6 +99,6 @@ else
         die "Failure copying host headers"
 fi
 
-echo "uint64_t mclock(void);" > ${DESTDIR}/rpi4.h
+echo "uint64_t tscclock_monotonic(void);" > ${DESTDIR}/rpi4.h
 
 cleanup

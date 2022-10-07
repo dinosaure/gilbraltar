@@ -76,10 +76,10 @@ el1_entry:
 .type	_start, function
 .global _start
 
-get_el:
+el:
 	mrs x0, CurrentEL
 	lsr x0, x0, #2
 	ret
-.size	get_el, . - get_el
-.type	get_el, function
-.global get_el
+.size	el, . - el
+.type	el, function
+.global el
