@@ -39,7 +39,7 @@ gilbraltar_stub.elf: $(filter-out kernel.o,$(OBJ))
 	@echo "LD $@"
 	$(LD) -r $(LDFLAGS) $^ -o $@
 	@echo "OBJCOPY $@"
-	$(OBJCOPY) -w -G mclock -G uart_\* -G irq_\* -G _start\* \
+	$(OBJCOPY) -w -G tscclock_monotonic -G uart_\* -G irq_\* -G _start\* \
 		-G __stack_chk_guard -G __stack_chk_fail \
 		$@ $@
 

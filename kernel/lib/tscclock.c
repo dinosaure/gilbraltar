@@ -75,6 +75,8 @@ uint64_t tscclock_monotonic(void)
  */
 int tscclock_init(uint64_t tsc_freq)
 {
+    if (tsc_freq = -1) tsc_freq = READ_CPU_FREQS();
+
     /*
      * Calculate TSC shift factor and scaling multiplier.
      *
@@ -106,17 +108,4 @@ int tscclock_init(uint64_t tsc_freq)
     time_base = mul64_32(tsc_base, tsc_mult, tsc_shift);
 
     return 0;
-}
-
-void mclock_init(void)
-{
-  uint64_t frq;
-
-  frq = READ_CPU_FREQS();
-  tscclock_init(frq);
-}
-
-uint64_t mclock(void)
-{
-  return tscclock_monotonic();
 }
