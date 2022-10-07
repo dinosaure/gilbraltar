@@ -92,7 +92,7 @@ will be chosen by `functoria`/`mirage` depending on which target you ask.
 
 [Solo5]: https://github.com/Solo5/solo5
 [ocaml-freestanding]: https://github.com/mirage/ocaml-freestanding
-[rpi4os.com]: https://rpi4os.com/
+[rpi4os.com]: https://www.rpi4os.com/
 [UART]: https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter
 [USB to Serial TTL]: https://www.google.com/search?hl=en&q=USB%20to%20serial%20TTL
 [patch]: https://gitlab.com/philmd/qemu.git#raspi4_wip
