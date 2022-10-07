@@ -8,7 +8,6 @@
 extern int tscclock_init(uint64_t tsc_freq);
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
-extern int get_el();
 static char* args[] = { "gi(l)braltar", NULL };
 
 static char* output00 = { "uart():     ok\n" };
@@ -53,6 +52,7 @@ void _start_c() {
   uart_drain_output_queue();
 
   caml_startup(args);
+
   for(;;){
     __asm__("wfi");
   };
