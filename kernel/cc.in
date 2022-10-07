@@ -82,6 +82,7 @@ case ${M} in
             @@CONFIG_TARGET_CC_CFLAGS@@ \
             -isystem ${I}/@@CONFIG_TARGET_TRIPLE@@ \
             -I ${I} \
+            -mstrict-align \
             -ffreestanding \
             -fstack-protector-strong \
             "$@"
