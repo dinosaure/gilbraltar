@@ -18,39 +18,37 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "lib.h"
 #include "io.h"
+#include "lib.h"
 
 /*
  * These functions deliberately do not call printf() or malloc() in order to
  * abort as quickly as possible without triggering further errors.
  */
 
-static void puts(const char *s)
-{
-    (void)uart_puts(s, strlen(s));
+static void puts(const char *s) { (void)uart_puts(s, strlen(s)); }
+
+void _assert_fail(const char *file, const char *line, const char *e) {
+  puts("Solo5: ABORT: ");
+  puts(file);
+  puts(":");
+  puts(line);
+  puts(": Assertion `");
+  puts(e);
+  puts("' failed\n");
+  for (;;)
+    ;
 }
 
-void _assert_fail(const char *file, const char *line, const char *e)
-{
-    puts("Solo5: ABORT: ");
-    puts(file);
-    puts(":");
-    puts(line);
-    puts(": Assertion `");
-    puts(e);
-    puts("' failed\n");
-    for(;;);
-}
-
-void _abort(const char *file, const char *line, const char *s, void *regs_hint)
-{
-    puts("Solo5: ABORT: ");
-    puts(file);
-    puts(":");
-    puts(line);
-    puts(": ");
-    puts(s);
-    puts("\n");
-    for(;;);
+void _abort(const char *file, const char *line, const char *s,
+            void *regs_hint) {
+  puts("Solo5: ABORT: ");
+  puts(file);
+  puts(":");
+  puts(line);
+  puts(": ");
+  puts(s);
+  puts("\n");
+  for (;;)
+    ;
 }

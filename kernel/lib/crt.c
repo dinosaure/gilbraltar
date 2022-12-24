@@ -18,9 +18,9 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "io.h"
 #include <stddef.h>
 #include <stdint.h>
-#include "io.h"
 
 /*
  * The stack canary value will be initialised to a pseudo-random value by
@@ -34,12 +34,11 @@ uintptr_t SSP_GUARD_SYMBOL = 0x00deadbeef0d0a00;
  * detected. There is very little we can do here safely, so just print a
  * message and abort, taking care to make minimal use of the stack.
  */
-static const char
-stack_chk_fail_message[] = "RPi4: ABORT: Stack corruption detected\n";
+static const char stack_chk_fail_message[] =
+    "RPi4: ABORT: Stack corruption detected\n";
 
-__attribute__((noreturn))
-void SSP_FAIL_SYMBOL(void)
-{
-    uart_puts_actual(stack_chk_fail_message, sizeof stack_chk_fail_message);
-    for(;;);
+__attribute__((noreturn)) void SSP_FAIL_SYMBOL(void) {
+  uart_puts_actual(stack_chk_fail_message, sizeof stack_chk_fail_message);
+  for (;;)
+    ;
 }

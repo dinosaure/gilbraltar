@@ -1,27 +1,27 @@
+#include "crt_init.h"
+#include "interrupts.h"
 #include "io.h"
 #include "lib.h"
 #include "log.h"
 #include "mem.h"
-#include "crt_init.h"
-#include "interrupts.h"
 
 extern int tscclock_init(uint64_t tsc_freq);
 extern void _nolibc_init(uintptr_t heap_start, size_t heap_size);
 extern void caml_startup(char **);
-static char* args[] = { "gi(l)braltar", NULL };
+static char *args[] = {"gi(l)braltar", NULL};
 
-static char* output00 = { "uart():     ok\n" };
-static char* output01 = { "tscclock(): ok\n" };
-static char* output02 = { "irq():      ok\n" };
-static char* output03 = { "mmu():      ok\n" };
-static char* output04 = { "mem():      ok\n" };
-static char* output05 = { "nolibc():   ok\n" };
+static char *output00 = {"uart():     ok\n"};
+static char *output01 = {"tscclock(): ok\n"};
+static char *output02 = {"irq():      ok\n"};
+static char *output03 = {"mmu():      ok\n"};
+static char *output04 = {"mem():      ok\n"};
+static char *output05 = {"nolibc():   ok\n"};
 
 extern void mmu_on();
 
 void _start_c() {
   uintptr_t heap_start;
-  size_t    heap_size;
+  size_t heap_size;
 
   crt_init_ssp();
 
@@ -53,7 +53,7 @@ void _start_c() {
 
   caml_startup(args);
 
-  for(;;){
+  for (;;) {
     __asm__("wfi");
   };
 }
