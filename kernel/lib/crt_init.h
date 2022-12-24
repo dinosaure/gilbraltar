@@ -18,6 +18,8 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <stdint.h>
+
 extern uintptr_t SSP_GUARD_SYMBOL;
 
 #include "cpu_aarch64.h"
