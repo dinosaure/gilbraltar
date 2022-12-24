@@ -37,7 +37,10 @@ let rec go t =
   | Some () -> ()
   | None ->
     Mirage_runtime.run_enter_iter_hooks () ; (* TODO(dinosaure): before or after [Lwt.poll]? *)
-    let timeout = match Time.select_next () with
+    let timeout =
+      if Lwt.paused_count () > 0
+      then 0L
+      else match Time.select_next () with
       | None -> Int64.add (Interrupts.elapsed_us ()) (Duration.of_day 1)
       | Some tm -> tm in
     Interrupts.(schedule L1) timeout ;
