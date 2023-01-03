@@ -1,2 +1,2 @@
-void _start() { }
-void irq_enable() { }
+void _start() {}
+void irq_enable() {}

@@ -10,41 +10,38 @@
 
 extern void uart_drain_output_queue(void);
 
-#define STUB_ABORT(function) \
-    int __unsup_##function(void) __asm__(#function) __attribute__((noreturn)); \
-    int __unsup_##function(void) \
-    { \
-        printf("STUB: abort: %s() called\n", #function); \
-        uart_drain_output_queue(); \
-	abort(); \
-    }
+#define STUB_ABORT(function)                                                   \
+  int __unsup_##function(void) __asm__(#function) __attribute__((noreturn));   \
+  int __unsup_##function(void) {                                               \
+    printf("STUB: abort: %s() called\n", #function);                           \
+    uart_drain_output_queue();                                                 \
+    abort();                                                                   \
+  }
 
 /*
  * Warnings are deliberately disabled here to reduce unnecessary verbosity under
  * normal operation. To enable, replace "called = 1" with "called = 0" and
  * rebuild.
  */
-#define STUB_WARN_ONCE(type, function, ret) \
-    type __unsup_##function(void) __asm__(#function); \
-    type __unsup_##function(void) \
-    { \
-        static int called = 1; \
-        if (!called) {\
-            printf("STUB: %s() called\n", #function); \
-            uart_drain_output_queue(); \
-            called = 1; \
-        } \
-	errno = ENOSYS; \
-	return ret; \
-    }
+#define STUB_WARN_ONCE(type, function, ret)                                    \
+  type __unsup_##function(void) __asm__(#function);                            \
+  type __unsup_##function(void) {                                              \
+    static int called = 1;                                                     \
+    if (!called) {                                                             \
+      printf("STUB: %s() called\n", #function);                                \
+      uart_drain_output_queue();                                               \
+      called = 1;                                                              \
+    }                                                                          \
+    errno = ENOSYS;                                                            \
+    return ret;                                                                \
+  }
 
-#define STUB_IGNORE(type, function, ret) \
-    type __unsup_##function(void) __asm__(#function); \
-    type __unsup_##function(void) \
-    { \
-	errno = ENOSYS; \
-	return ret; \
-    }
+#define STUB_IGNORE(type, function, ret)                                       \
+  type __unsup_##function(void) __asm__(#function);                            \
+  type __unsup_##function(void) {                                              \
+    errno = ENOSYS;                                                            \
+    return ret;                                                                \
+  }
 
 /* stdio.h */
 STUB_WARN_ONCE(int, fflush, 0);

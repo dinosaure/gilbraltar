@@ -18,17 +18,17 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "log.h"
 #include <stddef.h>
 #include <stdint.h>
-#include "log.h"
 
-#define PAGE_SIZE	4096
-#define PAGE_SHIFT	12
-#define PAGE_MASK	~(0xfff)
+#define PAGE_SIZE 4096
+#define PAGE_SHIFT 12
+#define PAGE_MASK ~(0xfff)
 
 extern char __boot_core_stack_end_exclusive[];
 
-#define MEMORY_SIZE	__boot_core_stack_end_exclusive
+#define MEMORY_SIZE __boot_core_stack_end_exclusive
 
 static uint64_t heap_start;
 
@@ -40,43 +40,40 @@ static uint64_t heap_start;
  * and the size of the heap in (*size).
  */
 static int mem_locked = 0;
-void mem_lock_heap(uintptr_t *start, size_t *size)
-{
-    mem_locked = 1;
-    *start = heap_start;
-    *size = ((unsigned long long) MEMORY_SIZE) - heap_start;
+void mem_lock_heap(uintptr_t *start, size_t *size) {
+  mem_locked = 1;
+  *start = heap_start;
+  *size = ((unsigned long long)MEMORY_SIZE) - heap_start;
 }
 
-void mem_init(void)
-{
-    extern char __text_start[], __text_end[], __rodata_end[], __end[];
-    uint64_t mem_size;
+void mem_init(void) {
+  extern char __text_start[], __text_end[], __rodata_end[], __end[];
+  uint64_t mem_size;
 
-    mem_size = (unsigned long long) MEMORY_SIZE;
-    heap_start = ((uint64_t)&__end + PAGE_SIZE - 1) & PAGE_MASK;
+  mem_size = (unsigned long long)MEMORY_SIZE;
+  heap_start = ((uint64_t)&__end + PAGE_SIZE - 1) & PAGE_MASK;
 
-    log(INFO, "RPi4: Memory map: %llu MB addressable:\n",
-            (unsigned long long)mem_size >> 20);
-    log(INFO, "RPi4:   reserved @ (0x0 - 0x%llx)\n",
-            (unsigned long long)__text_start-1);
-    log(INFO, "RPi4:       text @ (0x%llx - 0x%llx)\n",
-            (unsigned long long)__text_start, (unsigned long long)__text_end-1);
-    log(INFO, "RPi4:     rodata @ (0x%llx - 0x%llx)\n",
-            (unsigned long long)__text_end, (unsigned long long)__rodata_end-1);
-    log(INFO, "RPi4:       data @ (0x%llx - 0x%llx)\n",
-            (unsigned long long)__rodata_end, (unsigned long long)__end-1);
-    log(INFO, "RPi4:       heap >= 0x%llx < stack < 0x%llx\n",
-            (unsigned long long)heap_start, (unsigned long long)mem_size);
+  log(INFO, "RPi4: Memory map: %llu MB addressable:\n",
+      (unsigned long long)mem_size >> 20);
+  log(INFO, "RPi4:   reserved @ (0x0 - 0x%llx)\n",
+      (unsigned long long)__text_start - 1);
+  log(INFO, "RPi4:       text @ (0x%llx - 0x%llx)\n",
+      (unsigned long long)__text_start, (unsigned long long)__text_end - 1);
+  log(INFO, "RPi4:     rodata @ (0x%llx - 0x%llx)\n",
+      (unsigned long long)__text_end, (unsigned long long)__rodata_end - 1);
+  log(INFO, "RPi4:       data @ (0x%llx - 0x%llx)\n",
+      (unsigned long long)__rodata_end, (unsigned long long)__end - 1);
+  log(INFO, "RPi4:       heap >= 0x%llx < stack < 0x%llx\n",
+      (unsigned long long)heap_start, (unsigned long long)mem_size);
 }
 
 /*
  * Allocate pages on the heap.  Should only be called on
  * initialization (before solo5_app_main).
  */
-void *mem_ialloc_pages(size_t num)
-{
-    uint64_t prev = heap_start;
-    heap_start += num << PAGE_SHIFT;
+void *mem_ialloc_pages(size_t num) {
+  uint64_t prev = heap_start;
+  heap_start += num << PAGE_SHIFT;
 
-    return (void *)prev;
+  return (void *)prev;
 }

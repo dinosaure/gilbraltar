@@ -37,7 +37,7 @@ static uint8_t tsc_shift;
 /* Multiplier for converting TSC ticks to nsecs. (0.S) fixed point. */
 static uint32_t tsc_mult;
 
-#define NSEC_PER_SEC	1000000000ULL
+#define NSEC_PER_SEC 1000000000ULL
 
 #define READ_CPU_TICKS cpu_cntpct
 #define READ_CPU_FREQS cpu_cntfrq
@@ -45,19 +45,18 @@ static uint32_t tsc_mult;
 /*
  * Beturn monotonic time using TSC clock.
  */
-uint64_t tscclock_monotonic(void)
-{
-    uint64_t tsc_now, tsc_delta;
+uint64_t tscclock_monotonic(void) {
+  uint64_t tsc_now, tsc_delta;
 
-    /*
-     * Update time_base (monotonic time) and tsc_base (TSC time).
-     */
-    tsc_now = READ_CPU_TICKS();
-    tsc_delta = tsc_now - tsc_base;
-    time_base += mul64_32(tsc_delta, tsc_mult, tsc_shift);
-    tsc_base = tsc_now;
+  /*
+   * Update time_base (monotonic time) and tsc_base (TSC time).
+   */
+  tsc_now = READ_CPU_TICKS();
+  tsc_delta = tsc_now - tsc_base;
+  time_base += mul64_32(tsc_delta, tsc_mult, tsc_shift);
+  tsc_base = tsc_now;
 
-    return time_base;
+  return time_base;
 }
 
 /*
@@ -73,39 +72,39 @@ uint64_t tscclock_monotonic(void)
  * It is up to the tender to ensure that these requirements are met, and to
  * supply the TSC frequency to the guest.
  */
-int tscclock_init(uint64_t tsc_freq)
-{
-    if (tsc_freq = -1) tsc_freq = READ_CPU_FREQS();
+int tscclock_init(uint64_t tsc_freq) {
+  if (tsc_freq = -1)
+    tsc_freq = READ_CPU_FREQS();
 
-    /*
-     * Calculate TSC shift factor and scaling multiplier.
-     *
-     * tsc_shift (S) needs to be the largest (<=32) shift factor where the
-     * result of the tsc_mult calculcation below fits into uint32_t without
-     * truncation. Note that we disallow an S of zero to ensure the loop always
-     * terminates.
-     *
-     * (0.S) tsc_mult = NSEC_PER_SEC (S.S) / tsc_freq (S.0)
-     */
-    tsc_shift = 32;
-    uint64_t tmp;
-    do {
-        tmp = (NSEC_PER_SEC << tsc_shift) / tsc_freq;
-        if ((tmp & 0xFFFFFFFF00000000L) == 0L)
-            tsc_mult = (uint32_t)tmp;
-        else
-            tsc_shift--;
-    } while (tsc_shift > 0 && tsc_mult == 0L);
-    /* assert(tsc_mult != 0L); */
-    log(DEBUG, "RPi4: tscclock_init(): tsc_freq=%llu tsc_mult=%u tsc_shift=%u\n",
-        (unsigned long long)tsc_freq, tsc_mult, tsc_shift);
+  /*
+   * Calculate TSC shift factor and scaling multiplier.
+   *
+   * tsc_shift (S) needs to be the largest (<=32) shift factor where the
+   * result of the tsc_mult calculcation below fits into uint32_t without
+   * truncation. Note that we disallow an S of zero to ensure the loop always
+   * terminates.
+   *
+   * (0.S) tsc_mult = NSEC_PER_SEC (S.S) / tsc_freq (S.0)
+   */
+  tsc_shift = 32;
+  uint64_t tmp;
+  do {
+    tmp = (NSEC_PER_SEC << tsc_shift) / tsc_freq;
+    if ((tmp & 0xFFFFFFFF00000000L) == 0L)
+      tsc_mult = (uint32_t)tmp;
+    else
+      tsc_shift--;
+  } while (tsc_shift > 0 && tsc_mult == 0L);
+  /* assert(tsc_mult != 0L); */
+  log(DEBUG, "RPi4: tscclock_init(): tsc_freq=%llu tsc_mult=%u tsc_shift=%u\n",
+      (unsigned long long)tsc_freq, tsc_mult, tsc_shift);
 
-    /*
-     * Monotonic time begins at tsc_base (first read of TSC before
-     * calibration).
-     */
-    tsc_base = READ_CPU_TICKS();
-    time_base = mul64_32(tsc_base, tsc_mult, tsc_shift);
+  /*
+   * Monotonic time begins at tsc_base (first read of TSC before
+   * calibration).
+   */
+  tsc_base = READ_CPU_TICKS();
+  time_base = mul64_32(tsc_base, tsc_mult, tsc_shift);
 
-    return 0;
+  return 0;
 }
